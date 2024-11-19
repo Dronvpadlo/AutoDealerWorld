@@ -1,5 +1,6 @@
-package com.example.autodealerworld.entities;
+package com.example.autodealerworld.entity;
 
+import com.example.autodealerworld.entity.enums.ProfileType;
 import org.springframework.stereotype.Component;
 
 import javax.management.relation.Role;

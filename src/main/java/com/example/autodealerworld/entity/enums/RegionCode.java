@@ -1,4 +1,4 @@
-package com.example.autodealerworld.entities;
+package com.example.autodealerworld.entity.enums;
 
 public enum RegionCode {
     KYIV,
