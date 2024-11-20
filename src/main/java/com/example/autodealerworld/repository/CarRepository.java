@@ -1,6 +1,7 @@
 package com.example.autodealerworld.repository;
 
 import com.example.autodealerworld.entity.Car;
+import com.example.autodealerworld.entity.Region;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,5 +19,10 @@ public interface CarRepository extends JpaRepository<Car, Long> {
 
     List<Car> findCarsByPriceGreaterThan(double minPrice);
 
-    Optional<List<Car>> findCarsByRegion(String name);
+    Optional<List<Car>> findCarsByBrand(String brandName);
+
+    Optional<List<Car>> findCarsByRegion(String regionName);
+
+    Optional<List<Car>> findCarsByRegionAndBrand(String regionName, String brandName);
+
 }

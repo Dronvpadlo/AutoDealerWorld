@@ -3,16 +3,17 @@ package com.example.autodealerworld.controllers;
 import com.example.autodealerworld.entity.Brand;
 import com.example.autodealerworld.entity.Car;
 import com.example.autodealerworld.entity.Model;
+import com.example.autodealerworld.entity.Region;
 import com.example.autodealerworld.repository.BrandRepository;
 import com.example.autodealerworld.repository.CarRepository;
 import com.example.autodealerworld.repository.ModelRepository;
+import com.example.autodealerworld.repository.RegionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/cars")
@@ -24,6 +25,8 @@ public class CarController {
     private final ModelRepository modelRepository;
 
     private final BrandRepository brandRepository;
+
+    private final RegionRepository regionRepository;
 
     @GetMapping("")
     public ResponseEntity<List<Car>> getCars() {
@@ -48,14 +51,21 @@ public class CarController {
         }
     }
 
-    @GetMapping("")
-    public ResponseEntity<List<Car>> getCarByRegion(
-            @RequestParam (name = "city") String name
+    @GetMapping("/region")
+    public ResponseEntity<List<Car>> getCarByRegionAndBrand(
+            @RequestParam (name = "region") String regionName,
+            @RequestParam (name = "brand") String brandName
     ){
-        Optional<List<Car>> cars = carRepository.findCarsByRegion(name);
-        return ResponseEntity.of(cars);
+        if (regionName != null && brandName != null){
+            return ResponseEntity.of(carRepository.findCarsByRegionAndBrand(regionName, brandName));
+        }else if (regionName != null){
+            return ResponseEntity.of(carRepository.findCarsByRegion(regionName));
+        }else if (brandName != null){
+            return ResponseEntity.of(carRepository.findCarsByBrand(brandName));
+        }else {
+            return ResponseEntity.ok(carRepository.findAll());
+        }
     }
-
     @PostMapping("")
     public ResponseEntity<Car> postCar(@RequestBody Car carEntity) {
         carRepository.save(carEntity);
@@ -72,14 +82,31 @@ public class CarController {
         return new ResponseEntity<>(brand, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCar(@PathVariable Long id){
-        return new ResponseEntity<>("advertisement was deleted", HttpStatus.NO_CONTENT);
+    @PostMapping("/region")
+    public ResponseEntity<Region> postRegion(@RequestBody Region region){
+        regionRepository.save(region);
+        return new ResponseEntity<>(region, HttpStatus.CREATED);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Car> patchCar(@PathVariable Long id){
-        return null;
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCar(@PathVariable Long id){
+        carRepository.deleteById(id);
+        return new ResponseEntity<>("Car was deleted", HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Car> patchCar(@PathVariable Long id, @RequestBody Car car){
+        return ResponseEntity.of(
+                carRepository.findById(id)
+                        .map(oldCar ->{
+                            oldCar.setCarStatus(car.getCarStatus());
+                            oldCar.setBrand(car.getBrand());
+                            oldCar.setPrice(car.getPrice());
+                            oldCar.setOwner(car.getOwner());
+                            oldCar.setRegion(car.getRegion());
+                            return carRepository.save(oldCar);
+                        })
+        );
     }
 
 }
