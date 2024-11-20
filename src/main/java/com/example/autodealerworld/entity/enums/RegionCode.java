@@ -6,7 +6,7 @@ public enum RegionCode {
     RIVNE,
     ZHYTOMYR,
     ZAKARPATTYA,
-    IVANOFRANKIVSK,
+    IVANO_FRANKIVSK,
     TERNOPIL,
     CHERNIVTSI,
     VINNYTSYA,

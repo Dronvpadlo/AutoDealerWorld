@@ -1,23 +1,32 @@
 package com.example.autodealerworld.entity;
 
 import com.example.autodealerworld.entity.enums.ProfileType;
-import org.springframework.stereotype.Component;
+import com.example.autodealerworld.entity.enums.UserRole;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.management.relation.Role;
-
-@Component
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class UserEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String firstName;
-
-    private String lastName;
+    private String username;
 
     private String email;
 
+    private String phoneNumber;
+
     private String password;
 
-    private Role role;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
+    @Enumerated(EnumType.STRING)
     private ProfileType profileType;
 }

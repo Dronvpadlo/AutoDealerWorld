@@ -1,28 +1,36 @@
 package com.example.autodealerworld.controllers;
 
-import com.example.autodealerworld.entity.CarEntity;
+import com.example.autodealerworld.entity.Car;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.awt.*;
-import java.util.ArrayList;
+import java.util.List;
 
 @RestController
+@RequestMapping("/cars")
 @RequiredArgsConstructor
 public class CarController {
 
-    @GetMapping("/cars")
-    public ResponseEntity<String> getCars() {
-        return new ResponseEntity<>("Koenigsegg", HttpStatus.OK);
+    @GetMapping("")
+    public ResponseEntity<List<Car>> getCars() {
+        return null;
     }
 
-    @PostMapping("/cars")
-    public ResponseEntity<CarEntity> postCar(@RequestBody CarEntity carEntity) {
+    @PostMapping("")
+    public ResponseEntity<Car> postCar(@RequestBody Car carEntity) {
         return new ResponseEntity<>(carEntity, HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCar(@PathVariable Long id){
+        return new ResponseEntity<>("advertisement was deleted", HttpStatus.NO_CONTENT);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Car> patchCar(@PathVariable Long id){
+        return null;
+    }
+
 }
