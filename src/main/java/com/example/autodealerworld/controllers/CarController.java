@@ -48,6 +48,14 @@ public class CarController {
         }
     }
 
+    @GetMapping("")
+    public ResponseEntity<List<Car>> getCarByRegion(
+            @RequestParam (name = "city") String name
+    ){
+        Optional<List<Car>> cars = carRepository.findCarsByRegion(name);
+        return ResponseEntity.of(cars);
+    }
+
     @PostMapping("")
     public ResponseEntity<Car> postCar(@RequestBody Car carEntity) {
         carRepository.save(carEntity);
