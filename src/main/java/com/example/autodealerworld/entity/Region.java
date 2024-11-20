@@ -21,4 +21,9 @@ public class Region {
 
     @Enumerated(EnumType.STRING)
     private RegionCode code;
+
+    public Region(String name, RegionCode code) {
+        this.name = name;
+        this.code = code;
+    }
 }

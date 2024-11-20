@@ -35,4 +35,13 @@ public class Car {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private UserEntity owner;
+
+    public Car(Brand brand, double price, Currency currency, Region region, CarStatus carStatus, UserEntity owner) {
+        this.brand = brand;
+        this.price = price;
+        this.currency = currency;
+        this.region = region;
+        this.carStatus = carStatus;
+        this.owner = owner;
+    }
 }

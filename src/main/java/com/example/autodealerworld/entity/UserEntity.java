@@ -22,11 +22,17 @@ public class UserEntity {
 
     private String phoneNumber;
 
-    private String password;
+   /* private String password;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
     @Enumerated(EnumType.STRING)
     private ProfileType profileType;
+*/
+    public UserEntity(String username, String email, String phoneNumber) {
+        this.username = username;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+    }
 }

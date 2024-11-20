@@ -20,4 +20,5 @@ public class Model {
     private Long id;
 
     private String name;
+
 }
