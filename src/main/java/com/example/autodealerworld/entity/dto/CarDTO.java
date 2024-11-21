@@ -1,24 +1,24 @@
 package com.example.autodealerworld.entity.dto;
 
-import com.example.autodealerworld.entity.Brand;
-import com.example.autodealerworld.entity.Region;
 import com.example.autodealerworld.entity.User;
 import com.example.autodealerworld.entity.enums.CarStatus;
 import com.example.autodealerworld.entity.enums.Currency;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class CarDTO {
 
     private Long id;
 
-    private Brand brand;
+    private BrandDTO brand;
 
     private Double price;
 
     private Currency currency;
 
-    private Region region;
+    private RegionDTO region;
 
     private CarStatus carStatus;
 

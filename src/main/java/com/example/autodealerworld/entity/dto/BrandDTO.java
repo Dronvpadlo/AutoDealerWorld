@@ -1,7 +1,8 @@
 package com.example.autodealerworld.entity.dto;
 
-import com.example.autodealerworld.entity.Model;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class BrandDTO {
@@ -10,5 +11,7 @@ public class BrandDTO {
 
     private String name;
 
-    private Model model;
+    private ModelDTO model;
+
+    private List<CarDTO> cars;
 }
