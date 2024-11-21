@@ -4,10 +4,10 @@ import com.example.autodealerworld.entity.Car;
 import com.example.autodealerworld.entity.dto.CarDTO;
 import org.mapstruct.Mapper;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface CarMapper {
 
-    Car mapCarToDTO(CarDTO carDTO);
+    CarDTO mapCarToDTO(Car car);
 
-    CarDTO mapCarToEntity(Car car);
+    Car mapCarToEntity(CarDTO carDTO);
 }

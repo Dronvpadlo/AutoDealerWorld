@@ -4,7 +4,7 @@ import com.example.autodealerworld.entity.Region;
 import com.example.autodealerworld.entity.dto.RegionDTO;
 import org.mapstruct.Mapper;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface RegionMapper {
     Region mapReginToDTO(RegionDTO regionDTO);
 

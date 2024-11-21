@@ -4,6 +4,11 @@ import com.example.autodealerworld.entity.Brand;
 import com.example.autodealerworld.entity.Car;
 import com.example.autodealerworld.entity.Model;
 import com.example.autodealerworld.entity.Region;
+import com.example.autodealerworld.entity.dto.CarDTO;
+import com.example.autodealerworld.mapper.BrandMapper;
+import com.example.autodealerworld.mapper.CarMapper;
+import com.example.autodealerworld.mapper.ModelMapper;
+import com.example.autodealerworld.mapper.RegionMapper;
 import com.example.autodealerworld.repository.BrandRepository;
 import com.example.autodealerworld.repository.CarRepository;
 import com.example.autodealerworld.repository.ModelRepository;
@@ -28,9 +33,19 @@ public class CarController {
 
     private final RegionRepository regionRepository;
 
+    private final CarMapper carMapper;
+
+    private final ModelMapper modelMapper;
+
+    private final BrandMapper brandMapper;
+
+    private final RegionMapper regionMapper;
+
     @GetMapping("")
-    public ResponseEntity<List<Car>> getCars() {
-        List<Car> allCars = carRepository.findAll();
+    public ResponseEntity<List<CarDTO>> getCars() {
+        List<CarDTO> allCars = carRepository.findAll()
+                .stream().map(carMapper::mapCarToDTO)
+                .toList();
         return new ResponseEntity<>(allCars, HttpStatus.OK);
     }
 
@@ -104,7 +119,7 @@ public class CarController {
         return new ResponseEntity<>("Car was deleted", HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/{id}")
+    /*@PutMapping("/{id}")
     public ResponseEntity<Car> patchCar(@PathVariable Long id, @RequestBody Car car){
         return ResponseEntity.of(
                 carRepository.findById(id)
@@ -117,6 +132,6 @@ public class CarController {
                             return carRepository.save(oldCar);
                         })
         );
-    }
+    }*/
 
 }
