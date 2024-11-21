@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @NoArgsConstructor
 @Getter
@@ -21,8 +23,6 @@ public class Region {
     @Enumerated(EnumType.STRING)
     private RegionCode code;
 
-    public Region(String name, RegionCode code) {
-        this.name = name;
-        this.code = code;
-    }
+    @OneToMany(mappedBy = "region", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Car> cars;
 }

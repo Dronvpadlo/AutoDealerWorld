@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -19,12 +21,10 @@ public class Brand {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "model_id")
-    private Model model;
+    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL)
+    private List<Model> models;
 
-    public Brand(String name, Model model) {
-        this.name = name;
-        this.model = model;
-    }
+    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Car> cars;
+
 }
