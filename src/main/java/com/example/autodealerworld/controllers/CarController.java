@@ -34,7 +34,7 @@ public class CarController {
         return new ResponseEntity<>(allCars, HttpStatus.OK);
     }
 
-    @GetMapping("")
+    @GetMapping("/filter/price")
     public ResponseEntity<List<Car>> getCarBetweenPrice(
             @RequestParam (name = "minPrice", required = false) Double minPrice,
             @RequestParam (name = "maxPrice", required = false) Double maxPrice
@@ -51,7 +51,7 @@ public class CarController {
         }
     }
 
-    @GetMapping("/region")
+    /*@GetMapping("/region")
     public ResponseEntity<List<Car>> getCarByRegionAndBrand(
             @RequestParam (name = "region") String regionName,
             @RequestParam (name = "brand") String brandName
@@ -65,7 +65,7 @@ public class CarController {
         }else {
             return ResponseEntity.ok(carRepository.findAll());
         }
-    }
+    }*/
     @PostMapping("")
     public ResponseEntity<Car> postCar(@RequestBody Car carEntity) {
         carRepository.save(carEntity);
@@ -76,10 +76,20 @@ public class CarController {
         modelRepository.save(model);
         return new ResponseEntity<>(model, HttpStatus.CREATED);
     }
+    @GetMapping("/model")
+    public ResponseEntity<List<Model>> getModels() {
+        List<Model> models = modelRepository.findAll();
+        return new ResponseEntity<>(models, HttpStatus.OK);
+    }
     @PostMapping("/brand")
     public ResponseEntity<Brand> postCar(@RequestBody Brand brand) {
         brandRepository.save(brand);
         return new ResponseEntity<>(brand, HttpStatus.CREATED);
+    }
+    @GetMapping("/brand")
+    public ResponseEntity<List<Brand>> getBrands() {
+        List<Brand> brands = brandRepository.findAll();
+        return new ResponseEntity<>(brands, HttpStatus.OK);
     }
 
     @PostMapping("/region")

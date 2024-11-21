@@ -1,6 +1,5 @@
 package com.example.autodealerworld.entity;
 
-import com.example.autodealerworld.entity.enums.Currency;
 import com.example.autodealerworld.entity.enums.RegionCode;
 import jakarta.persistence.*;
 import lombok.Getter;

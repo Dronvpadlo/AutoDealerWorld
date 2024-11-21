@@ -16,27 +16,27 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "brand_id", nullable = false)
     private Brand brand;
 
-    private double price;
+    private Double price;
 
     @Enumerated(EnumType.STRING)
     private Currency currency;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "region_id", nullable = false)
     private Region region;
 
     @Enumerated(EnumType.STRING)
     private CarStatus carStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id", nullable = false)
-    private UserEntity owner;
+    private User owner;
 
-    public Car(Brand brand, double price, Currency currency, Region region, CarStatus carStatus, UserEntity owner) {
+    public Car(Brand brand, Double price, Currency currency, Region region, CarStatus carStatus, User owner) {
         this.brand = brand;
         this.price = price;
         this.currency = currency;

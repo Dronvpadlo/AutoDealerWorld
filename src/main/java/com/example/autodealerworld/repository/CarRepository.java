@@ -13,16 +13,16 @@ import java.util.Optional;
 public interface CarRepository extends JpaRepository<Car, Long> {
 
     @Query("select p from Car p where p.price> :minPrice and p.price < :maxPrice")
-    List<Car> findCarsByPriceBetween(double minPrice, double maxPrice);
+    List<Car> findCarsByPriceBetween(Double minPrice, Double maxPrice);
 
-    List<Car> findCarsByPriceLessThan(double maxPrice);
+    List<Car> findCarsByPriceLessThan(Double maxPrice);
 
-    List<Car> findCarsByPriceGreaterThan(double minPrice);
+    List<Car> findCarsByPriceGreaterThan(Double minPrice);
 
-    Optional<List<Car>> findCarsByBrand(String brandName);
+    //Optional<List<Car>> findCarsByBrand(String brandName);
 
-    Optional<List<Car>> findCarsByRegion(String regionName);
+    /*Optional<List<Car>> findCarsByRegion(String regionName);
 
-    Optional<List<Car>> findCarsByRegionAndBrand(String regionName, String brandName);
+    Optional<List<Car>> findCarsByRegionAndBrand(String regionName, String brandName);*/
 
 }
