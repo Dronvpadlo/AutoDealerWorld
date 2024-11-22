@@ -40,17 +40,24 @@ public class BrandService {
 
     public BrandWithModelsDTO updateBrand(Long id, BrandWithModelsDTO brandDTO){
         Brand brand = brandRepository.findById(id).orElseThrow(()-> new RuntimeException("Brand not found"));
-        brand.setName(brandDTO.getName());
-        Brand newBrand = brandRepository.save(brand);
+        Brand newBrand = brandUtil.mapBrandToEntity(brandDTO);
+        brand.setName(newBrand.getName());
+        brand.setModels(newBrand.getModels());
+        brandRepository.save(brand);
         return brandUtil.mapBrandWithModelsToDTO(newBrand);
     }
 
     public BrandWithModelsDTO updateBrandPartially(Long id, BrandWithModelsDTO brandDTO){
         Brand brand = brandRepository.findById(id).orElseThrow(()-> new RuntimeException("Brand not found"));
-        if (brandDTO.getName() != null) {
-            brand.setName(brandDTO.getName());
+        Brand newBrand = brandUtil.mapBrandToEntity(brandDTO);
+        if (newBrand.getName() != null) {
+            brand.setName(newBrand.getName());
         }
-        Brand newBrand = brandRepository.save(brand);
+        if (newBrand.getModels() != null){
+            brand.setModels(newBrand.getModels());
+        }
+
+        brandRepository.save(brand);
         return brandUtil.mapBrandWithModelsToDTO(newBrand);
 
     }
