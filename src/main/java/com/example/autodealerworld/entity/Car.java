@@ -20,7 +20,13 @@ public class Car {
     @JoinColumn(name = "brand_id", nullable = false)
     private Brand brand;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "model_id", nullable = false)
+    private Model model;
+
     private Double price;
+
+    private Long year;
 
     @Enumerated(EnumType.STRING)
     private Currency currency;
@@ -32,8 +38,7 @@ public class Car {
     @Enumerated(EnumType.STRING)
     private CarStatus carStatus;
 
-    /*@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
-    private User owner;
-*/
+    //@ManyToOne(fetch = FetchType.LAZY)
+    //@JoinColumn(name = "owner_id", nullable = false)
+    //private User owner;
 }

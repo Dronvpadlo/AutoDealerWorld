@@ -34,6 +34,11 @@ public class ModelService {
         modelRepository.save(model);
     }
 
+    public Model findModelById(Long id){
+        return modelRepository.findById(id).orElseThrow(() -> new RuntimeException("Model not found with id: " + id));
+
+    }
+
     public void deleteModelById(Long id){
         modelRepository.deleteById(id);
     }

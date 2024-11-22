@@ -1,5 +1,6 @@
 package com.example.autodealerworld.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class Brand {
     private List<Model> models;
 
     @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Car> cars;
 
 }

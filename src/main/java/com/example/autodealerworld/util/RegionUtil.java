@@ -1,13 +1,8 @@
 package com.example.autodealerworld.util;
 
-import com.example.autodealerworld.entity.Car;
 import com.example.autodealerworld.entity.Region;
-import com.example.autodealerworld.entity.dto.CarDTO;
 import com.example.autodealerworld.entity.dto.RegionDTO;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class RegionUtil {

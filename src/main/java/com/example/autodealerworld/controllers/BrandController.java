@@ -1,6 +1,6 @@
 package com.example.autodealerworld.controllers;
 
-import com.example.autodealerworld.entity.dto.BrandDTO;
+import com.example.autodealerworld.entity.dto.BrandWithModelsDTO;
 import com.example.autodealerworld.services.BrandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,11 +16,11 @@ public class BrandController {
 
     private final BrandService brandService;
     @PostMapping("")
-    public ResponseEntity<BrandDTO> postBrand(@RequestBody BrandDTO brandDTO) {
+    public ResponseEntity<BrandWithModelsDTO> postBrand(@RequestBody BrandWithModelsDTO brandDTO) {
         return new ResponseEntity<>(brandService.createBrand(brandDTO), HttpStatus.CREATED);
     }
     @GetMapping("")
-    public ResponseEntity<List<BrandDTO>> getBrands() {
+    public ResponseEntity<List<BrandWithModelsDTO>> getBrands() {
         return new ResponseEntity<>(brandService.findAll(), HttpStatus.OK);
     }
 
@@ -31,12 +31,12 @@ public class BrandController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BrandDTO> putBrand(@PathVariable Long id, @RequestBody BrandDTO brandDTO){
+    public ResponseEntity<BrandWithModelsDTO> putBrand(@PathVariable Long id, @RequestBody BrandWithModelsDTO brandDTO){
         return new ResponseEntity<>(brandService.updateBrand(id, brandDTO), HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<BrandDTO> patchBrand(@PathVariable Long id, @RequestBody BrandDTO brandDTO){
+    public ResponseEntity<BrandWithModelsDTO> patchBrand(@PathVariable Long id, @RequestBody BrandWithModelsDTO brandDTO){
         return new ResponseEntity<>(brandService.updateBrandPartially(id, brandDTO), HttpStatus.OK);
     }
 }

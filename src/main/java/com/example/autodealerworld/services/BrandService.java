@@ -1,7 +1,7 @@
 package com.example.autodealerworld.services;
 
 import com.example.autodealerworld.entity.Brand;
-import com.example.autodealerworld.entity.dto.BrandDTO;
+import com.example.autodealerworld.entity.dto.BrandWithModelsDTO;
 import com.example.autodealerworld.repository.BrandRepository;
 import com.example.autodealerworld.util.BrandUtil;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +17,18 @@ public class BrandService {
 
     private final BrandUtil brandUtil;
 
-    public List<BrandDTO> findAll() {
+    public List<BrandWithModelsDTO> findAll() {
         return brandRepository.findAll()
-                .stream().map(brandUtil::mapBrandToDTO)
+                .stream().map(brandUtil::mapBrandWithModelsToDTO)
                 .toList();
     }
 
-    public BrandDTO createBrand(BrandDTO brandDTO){
+    public Brand findBrandById(Long id){
+        return brandRepository.findById(id).orElseThrow(() -> new RuntimeException("Brand not found with id: " + id));
+
+    }
+
+    public BrandWithModelsDTO createBrand(BrandWithModelsDTO brandDTO){
         Brand brand = brandUtil.mapBrandToEntity(brandDTO);
         brandRepository.save(brand);
         return brandDTO;
@@ -33,20 +38,20 @@ public class BrandService {
         brandRepository.deleteById(id);
     }
 
-    public BrandDTO updateBrand(Long id, BrandDTO brandDTO){
+    public BrandWithModelsDTO updateBrand(Long id, BrandWithModelsDTO brandDTO){
         Brand brand = brandRepository.findById(id).orElseThrow(()-> new RuntimeException("Brand not found"));
         brand.setName(brandDTO.getName());
         Brand newBrand = brandRepository.save(brand);
-        return brandUtil.mapBrandToDTO(newBrand);
+        return brandUtil.mapBrandWithModelsToDTO(newBrand);
     }
 
-    public BrandDTO updateBrandPartially(Long id, BrandDTO brandDTO){
+    public BrandWithModelsDTO updateBrandPartially(Long id, BrandWithModelsDTO brandDTO){
         Brand brand = brandRepository.findById(id).orElseThrow(()-> new RuntimeException("Brand not found"));
         if (brandDTO.getName() != null) {
             brand.setName(brandDTO.getName());
         }
         Brand newBrand = brandRepository.save(brand);
-        return brandUtil.mapBrandToDTO(newBrand);
+        return brandUtil.mapBrandWithModelsToDTO(newBrand);
 
     }
 

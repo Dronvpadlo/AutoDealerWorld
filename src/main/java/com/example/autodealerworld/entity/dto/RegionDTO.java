@@ -3,6 +3,7 @@ package com.example.autodealerworld.entity.dto;
 import com.example.autodealerworld.entity.Car;
 
 import com.example.autodealerworld.entity.enums.RegionCode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,5 +18,6 @@ public class RegionDTO {
 
     private RegionCode code;
 
+    @JsonIgnore
     private List<Long> carIds;
 }

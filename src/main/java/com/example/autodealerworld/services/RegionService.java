@@ -27,6 +27,10 @@ public class RegionService {
                 .map(regionUtil::MapRegionToDTO).toList();
     }
 
+    public Region findRegionById(Long regionId){
+        return regionRepository.findById(regionId).orElseThrow(() -> new RuntimeException("Region not found with id: " + regionId));
+    }
+
     public RegionDTO createRegion(RegionDTO regionDTO){
         Region region = regionUtil.mapRegionToEntity(regionDTO);
         regionRepository.save(region);

@@ -14,7 +14,11 @@ public class CarDTO {
 
     private BrandDTO brand;
 
+    private ModelDTO model;
+
     private Double price;
+
+    private Long year;
 
     private Currency currency;
 
@@ -22,5 +26,5 @@ public class CarDTO {
 
     private CarStatus carStatus;
 
-    private UserDTO owner;
+    //private UserDTO owner;
 }
