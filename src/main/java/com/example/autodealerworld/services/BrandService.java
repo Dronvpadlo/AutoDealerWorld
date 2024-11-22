@@ -2,7 +2,7 @@ package com.example.autodealerworld.services;
 
 import com.example.autodealerworld.entity.Brand;
 import com.example.autodealerworld.entity.dto.BrandDTO;
-import com.example.autodealerworld.mapper.BrandUtil;
+import com.example.autodealerworld.util.BrandUtil;
 import com.example.autodealerworld.repository.BrandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

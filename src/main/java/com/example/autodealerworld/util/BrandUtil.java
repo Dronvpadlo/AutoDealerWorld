@@ -1,4 +1,4 @@
-package com.example.autodealerworld.mapper;
+package com.example.autodealerworld.util;
 
 import com.example.autodealerworld.entity.Brand;
 import com.example.autodealerworld.entity.Model;
@@ -38,7 +38,7 @@ public class BrandUtil {
                     .map(model -> {
                         ModelDTO modelDTO = new ModelDTO();
                         modelDTO.setName(model.getName());
-                        modelDTO.setModelId(modelDTO.getModelId());
+                        modelDTO.setModelId(model.getId());
                         modelDTO.setBrandId(brand.getId());
                         return modelDTO;
                     })
