@@ -1,6 +1,5 @@
 package com.example.autodealerworld.controllers;
 
-import com.example.autodealerworld.entity.Model;
 import com.example.autodealerworld.entity.dto.ModelDTO;
 import com.example.autodealerworld.services.ModelService;
 import lombok.RequiredArgsConstructor;
