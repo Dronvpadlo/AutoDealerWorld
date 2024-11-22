@@ -1,17 +1,10 @@
 package com.example.autodealerworld.controllers;
 
-import com.example.autodealerworld.entity.Brand;
 import com.example.autodealerworld.entity.Car;
-import com.example.autodealerworld.entity.Model;
 import com.example.autodealerworld.entity.Region;
 import com.example.autodealerworld.entity.dto.CarDTO;
-import com.example.autodealerworld.mapper.BrandMapper;
-import com.example.autodealerworld.mapper.CarMapper;
-import com.example.autodealerworld.mapper.ModelMapper;
-import com.example.autodealerworld.mapper.RegionMapper;
 import com.example.autodealerworld.repository.BrandRepository;
 import com.example.autodealerworld.repository.CarRepository;
-import com.example.autodealerworld.repository.ModelRepository;
 import com.example.autodealerworld.repository.RegionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,27 +20,9 @@ public class CarController {
 
     private final CarRepository carRepository;
 
-    private final ModelRepository modelRepository;
-
     private final BrandRepository brandRepository;
 
     private final RegionRepository regionRepository;
-
-    private final CarMapper carMapper;
-
-    private final ModelMapper modelMapper;
-
-    private final BrandMapper brandMapper;
-
-    private final RegionMapper regionMapper;
-
-    @GetMapping("")
-    public ResponseEntity<List<CarDTO>> getCars() {
-        List<CarDTO> allCars = carRepository.findAll()
-                .stream().map(carMapper::mapCarToDTO)
-                .toList();
-        return new ResponseEntity<>(allCars, HttpStatus.OK);
-    }
 
     @GetMapping("/filter/price")
     public ResponseEntity<List<Car>> getCarBetweenPrice(
@@ -85,26 +60,6 @@ public class CarController {
     public ResponseEntity<Car> postCar(@RequestBody Car carEntity) {
         carRepository.save(carEntity);
         return new ResponseEntity<>(carEntity, HttpStatus.CREATED);
-    }
-    @PostMapping("/model")
-    public ResponseEntity<Model> postModel(@RequestBody Model model) {
-        modelRepository.save(model);
-        return new ResponseEntity<>(model, HttpStatus.CREATED);
-    }
-    @GetMapping("/model")
-    public ResponseEntity<List<Model>> getModels() {
-        List<Model> models = modelRepository.findAll();
-        return new ResponseEntity<>(models, HttpStatus.OK);
-    }
-    @PostMapping("/brand")
-    public ResponseEntity<Brand> postCar(@RequestBody Brand brand) {
-        brandRepository.save(brand);
-        return new ResponseEntity<>(brand, HttpStatus.CREATED);
-    }
-    @GetMapping("/brand")
-    public ResponseEntity<List<Brand>> getBrands() {
-        List<Brand> brands = brandRepository.findAll();
-        return new ResponseEntity<>(brands, HttpStatus.OK);
     }
 
     @PostMapping("/region")

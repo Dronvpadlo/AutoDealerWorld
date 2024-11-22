@@ -1,11 +1,12 @@
 package com.example.autodealerworld.entity.dto;
 
-import com.example.autodealerworld.entity.Brand;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class ModelDTO {
-    private Long id;
+    private Long modelId;
     private String name;
-    private BrandDTO brand;
+    private Long brandId;
 }
