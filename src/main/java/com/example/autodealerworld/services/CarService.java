@@ -1,6 +1,5 @@
 package com.example.autodealerworld.services;
 
-import com.example.autodealerworld.entity.Brand;
 import com.example.autodealerworld.entity.Car;
 import com.example.autodealerworld.entity.dto.CarDTO;
 import com.example.autodealerworld.repository.CarRepository;
