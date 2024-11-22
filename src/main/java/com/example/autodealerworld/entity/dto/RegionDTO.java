@@ -17,5 +17,5 @@ public class RegionDTO {
 
     private RegionCode code;
 
-    private List<Car> cars;
+    private List<Long> carIds;
 }

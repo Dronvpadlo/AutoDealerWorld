@@ -2,8 +2,8 @@ package com.example.autodealerworld.services;
 
 import com.example.autodealerworld.entity.Brand;
 import com.example.autodealerworld.entity.dto.BrandDTO;
-import com.example.autodealerworld.util.BrandUtil;
 import com.example.autodealerworld.repository.BrandRepository;
+import com.example.autodealerworld.util.BrandUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +24,30 @@ public class BrandService {
     }
 
     public BrandDTO createBrand(BrandDTO brandDTO){
-        System.out.println("DTO: " + brandDTO);
         Brand brand = brandUtil.mapBrandToEntity(brandDTO);
         brandRepository.save(brand);
         return brandDTO;
     }
 
-    public Brand findBrandById(Long id) {
-        return brandRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Brand with id " + id + " not found"));
+    public void deleteBrandById(Long id){
+        brandRepository.deleteById(id);
     }
+
+    public BrandDTO updateBrand(Long id, BrandDTO brandDTO){
+        Brand brand = brandRepository.findById(id).orElseThrow(()-> new RuntimeException("Brand not found"));
+        brand.setName(brandDTO.getName());
+        Brand newBrand = brandRepository.save(brand);
+        return brandUtil.mapBrandToDTO(newBrand);
+    }
+
+    public BrandDTO updateBrandPartially(Long id, BrandDTO brandDTO){
+        Brand brand = brandRepository.findById(id).orElseThrow(()-> new RuntimeException("Brand not found"));
+        if (brandDTO.getName() != null) {
+            brand.setName(brandDTO.getName());
+        }
+        Brand newBrand = brandRepository.save(brand);
+        return brandUtil.mapBrandToDTO(newBrand);
+
+    }
+
 }
