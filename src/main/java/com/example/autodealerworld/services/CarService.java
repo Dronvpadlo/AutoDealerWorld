@@ -3,6 +3,7 @@ package com.example.autodealerworld.services;
 import com.example.autodealerworld.entity.Brand;
 import com.example.autodealerworld.entity.Car;
 import com.example.autodealerworld.entity.dto.CarDTO;
+import com.example.autodealerworld.entity.dto.CarFilterDTO;
 import com.example.autodealerworld.repository.BrandRepository;
 import com.example.autodealerworld.repository.CarRepository;
 import com.example.autodealerworld.util.CarUtil;
@@ -20,6 +21,8 @@ public class CarService {
     private final CarUtil carUtil;
 
     private final BrandRepository brandRepository;
+
+
 
     public List<CarDTO> findAll(){
         return carRepository.findAll()
@@ -92,4 +95,21 @@ public class CarService {
         return carUtil.mapCarToDTO(car);
 
     }
+
+    public List<CarDTO> getFilteredCar(CarFilterDTO filterDTO){
+        List<Car> cars = carRepository.findCarsByFilters(
+                filterDTO.getBrand(),
+                filterDTO.getModel(),
+                filterDTO.getRegion(),
+                filterDTO.getMinPrice(),
+                filterDTO.getMaxPrice(),
+                filterDTO.getMinYear(),
+                filterDTO.getMaxYear(),
+                filterDTO.getCarStatus()
+        );
+        return cars.stream()
+                .map(carUtil::mapCarToDTO).toList();
+
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.example.autodealerworld.controllers;
 
 import com.example.autodealerworld.entity.dto.CarDTO;
+import com.example.autodealerworld.entity.dto.CarFilterDTO;
 import com.example.autodealerworld.services.CarService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,23 +44,10 @@ public class CarController {
         return new ResponseEntity<>(carService.updateCar(id, carDTO), HttpStatus.OK);
     }
 
-
-
-    /*@GetMapping("/filter/price")
-    public ResponseEntity<List<Car>> getCarBetweenPrice(
-            @RequestParam (name = "minPrice", required = false) Double minPrice,
-            @RequestParam (name = "maxPrice", required = false) Double maxPrice
-    )
-    {
-        if (minPrice != null && maxPrice != null){
-            return ResponseEntity.ok(carRepository.findCarsByPriceBetween(minPrice, maxPrice));
-        }else if (minPrice != null){
-            return ResponseEntity.ok(carRepository.findCarsByPriceGreaterThan(minPrice));
-        }else if (maxPrice != null){
-            return ResponseEntity.ok(carRepository.findCarsByPriceLessThan(maxPrice));
-        }else {
-            return ResponseEntity.ok(carRepository.findAll());
-        }
-    }*/
+    @GetMapping("/filter")
+    public ResponseEntity<List<CarDTO>> getFilteredCars(CarFilterDTO carFilterDTO){
+        List<CarDTO> cars = carService.getFilteredCar(carFilterDTO);
+        return new ResponseEntity<>(cars, HttpStatus.OK);
+    }
 
 }
