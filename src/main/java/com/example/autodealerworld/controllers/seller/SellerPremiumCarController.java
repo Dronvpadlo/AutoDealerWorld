@@ -2,6 +2,7 @@ package com.example.autodealerworld.controllers.seller;
 
 import com.example.autodealerworld.entity.dto.CarDTO;
 import com.example.autodealerworld.entity.dto.CarFilterDTO;
+import com.example.autodealerworld.entity.enums.RegionCode;
 import com.example.autodealerworld.services.CarService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -47,4 +48,18 @@ public class SellerPremiumCarController {
         List<CarDTO> cars = carService.getFilteredCar(carFilterDTO);
         return new ResponseEntity<>(cars, HttpStatus.OK);
     }
+
+    @GetMapping("/stats/average-price")
+    public ResponseEntity<Double> getAveragePriceByBrand(
+            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) String model,
+            @RequestParam(required = false) String region,
+            @RequestParam(required = false) Long year,
+            @RequestParam(required = false) RegionCode regionCode
+
+    ){
+        Double averagePrice = carService.getAveragePrice(brand, model, region, year, regionCode);
+        return new ResponseEntity<>(averagePrice, HttpStatus.OK);
+    }
+
 }

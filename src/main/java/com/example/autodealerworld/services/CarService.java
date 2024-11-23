@@ -4,12 +4,15 @@ import com.example.autodealerworld.entity.Brand;
 import com.example.autodealerworld.entity.Car;
 import com.example.autodealerworld.entity.dto.CarDTO;
 import com.example.autodealerworld.entity.dto.CarFilterDTO;
+import com.example.autodealerworld.entity.enums.RegionCode;
 import com.example.autodealerworld.repository.BrandRepository;
 import com.example.autodealerworld.repository.CarRepository;
 import com.example.autodealerworld.util.CarUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Service
@@ -110,6 +113,25 @@ public class CarService {
         return cars.stream()
                 .map(carUtil::mapCarToDTO).toList();
 
+    }
+
+    public Double getAveragePrice(String brand, String model, String region, Long year, RegionCode regionCode){
+        if (brand == null && model == null && region == null && year == null && regionCode == null) {
+            Double globalAveragePrice = carRepository.findGlobalAveragePrice();
+            if (globalAveragePrice != null){
+                return BigDecimal.valueOf(globalAveragePrice)
+                        .setScale(2, RoundingMode.HALF_UP)
+                        .doubleValue();
+            }
+            return null;
+        }
+        Double averagePrice = carRepository.findAveragePriceByBrand(brand, model, region, year, regionCode);
+        if (averagePrice != null){
+            return BigDecimal.valueOf(averagePrice)
+                    .setScale(2, RoundingMode.HALF_UP)
+                    .doubleValue();
+        }
+        return null;
     }
 
 }
