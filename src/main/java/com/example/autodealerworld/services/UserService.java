@@ -40,6 +40,11 @@ public class UserService {
         return userRepository.findAll().stream().map(userUtil::mapUserToDTO).toList();
     }
 
+    public User findUserById(Long userId){
+        return userRepository.findById(userId)
+                .orElseThrow(()-> new RuntimeException("User not found"));
+    }
+
     public UserDTO beAsSeller(Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new RuntimeException("User not found"));

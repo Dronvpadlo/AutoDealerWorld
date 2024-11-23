@@ -37,5 +37,5 @@ public class CarDTO {
     @NotNull(message = "car status can not be null")
     private CarStatus carStatus;
 
-    //private UserDTO owner;
+    private UserDTO owner;
 }

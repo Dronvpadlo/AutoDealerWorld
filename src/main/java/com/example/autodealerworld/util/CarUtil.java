@@ -1,13 +1,11 @@
 package com.example.autodealerworld.util;
 
-import com.example.autodealerworld.entity.Brand;
-import com.example.autodealerworld.entity.Car;
-import com.example.autodealerworld.entity.Model;
-import com.example.autodealerworld.entity.Region;
+import com.example.autodealerworld.entity.*;
 import com.example.autodealerworld.entity.dto.*;
 import com.example.autodealerworld.services.BrandService;
 import com.example.autodealerworld.services.ModelService;
 import com.example.autodealerworld.services.RegionService;
+import com.example.autodealerworld.services.UserService;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,13 +23,19 @@ public class CarUtil {
 
     private final ModelService modelService;
 
-    public CarUtil(BrandUtil brandUtil, BrandService brandService, RegionService regionService, RegionUtil regionUtil, ModelUtil modelUtil, ModelService modelService) {
+    private final UserService userService;
+
+    private final UserUtil userUtil;
+
+    public CarUtil(BrandUtil brandUtil, BrandService brandService, RegionService regionService, RegionUtil regionUtil, ModelUtil modelUtil, ModelService modelService, UserService userService, UserUtil userUtil) {
         this.brandUtil = brandUtil;
         this.brandService = brandService;
         this.regionService = regionService;
         this.regionUtil = regionUtil;
         this.modelUtil = modelUtil;
         this.modelService = modelService;
+        this.userService = userService;
+        this.userUtil = userUtil;
     }
 
     public Car mapCarToEntity(CarDTO carDTO){
@@ -56,6 +60,11 @@ public class CarUtil {
             Model model = modelService.findModelById(carDTO.getModel().getModelId());
             car.setModel(model);
         }
+        if (carDTO.getOwner() != null){
+            User user = userService.findUserById(carDTO.getOwner().getUserId());
+            car.setOwner(user);
+        }
+
         return car;
     }
 
@@ -77,11 +86,16 @@ public class CarUtil {
             RegionDTO regionDTO = regionUtil.MapRegionToDTO(region);
             carDTO.setRegion(regionDTO);
         }
-
         if (car.getModel() != null){
             Model model = modelService.findModelById(car.getModel().getId());
             ModelDTO modelDTO = modelUtil.mapModelToDTO(model);
             carDTO.setModel(modelDTO);
+        }
+        if (car.getOwner() != null){
+            User user = userService.findUserById(car.getOwner().getId());
+            System.out.println(user);
+            UserDTO userDTO = userUtil.mapUserToDTO(user);
+            carDTO.setOwner(userDTO);
         }
         return carDTO;
     }
