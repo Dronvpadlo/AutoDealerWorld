@@ -2,6 +2,7 @@ package com.example.autodealerworld.controllers;
 
 import com.example.autodealerworld.entity.dto.CarDTO;
 import com.example.autodealerworld.services.CarService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class CarController {
     }
 
     @PostMapping("")
-    public ResponseEntity<CarDTO> postCar(@RequestBody CarDTO carDTO){
+    public ResponseEntity<CarDTO> postCar(@RequestBody @Valid CarDTO carDTO){
         return new ResponseEntity<>(carService.createCar(carDTO), HttpStatus.CREATED);
     }
 

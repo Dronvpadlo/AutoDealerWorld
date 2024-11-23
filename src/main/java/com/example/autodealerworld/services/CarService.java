@@ -1,7 +1,9 @@
 package com.example.autodealerworld.services;
 
+import com.example.autodealerworld.entity.Brand;
 import com.example.autodealerworld.entity.Car;
 import com.example.autodealerworld.entity.dto.CarDTO;
+import com.example.autodealerworld.repository.BrandRepository;
 import com.example.autodealerworld.repository.CarRepository;
 import com.example.autodealerworld.util.CarUtil;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,8 @@ public class CarService {
 
     private final CarUtil carUtil;
 
+    private final BrandRepository brandRepository;
+
     public List<CarDTO> findAll(){
         return carRepository.findAll()
                 .stream().map(carUtil::mapCarToDTO)
@@ -24,6 +28,16 @@ public class CarService {
     }
 
     public CarDTO createCar(CarDTO carDTO){
+        Brand brand = brandRepository.findById(carDTO.getBrand().getBrandId())
+                .orElseThrow(()-> new RuntimeException("Brand not found"));
+
+        boolean modelBelongsToBrand = brand.getModels()
+                .stream()
+                .anyMatch(model -> model.getId().equals(carDTO.getModel().getModelId()));
+        if (!modelBelongsToBrand){
+            throw new RuntimeException("Model does not belong to request brand");
+        }
+
         Car car = carUtil.mapCarToEntity(carDTO);
         carRepository.save(car);
         return carDTO;
