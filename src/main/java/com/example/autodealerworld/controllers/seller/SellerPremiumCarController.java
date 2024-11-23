@@ -1,4 +1,4 @@
-package com.example.autodealerworld.controllers;
+package com.example.autodealerworld.controllers.seller;
 
 import com.example.autodealerworld.entity.dto.CarDTO;
 import com.example.autodealerworld.entity.dto.CarFilterDTO;
@@ -10,12 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
-@RequestMapping("/cars")
+@RequestMapping("/cars/premiumseller")
 @RequiredArgsConstructor
-public class CarController {
-
+public class SellerPremiumCarController {
     private final CarService carService;
 
     @GetMapping("")
@@ -49,5 +47,4 @@ public class CarController {
         List<CarDTO> cars = carService.getFilteredCar(carFilterDTO);
         return new ResponseEntity<>(cars, HttpStatus.OK);
     }
-
 }

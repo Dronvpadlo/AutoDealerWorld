@@ -1,4 +1,4 @@
-package com.example.autodealerworld.controllers;
+package com.example.autodealerworld.controllers.manager;
 
 import com.example.autodealerworld.entity.dto.BrandWithModelsDTO;
 import com.example.autodealerworld.services.BrandService;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cars/brand")
+@RequestMapping("/cars/manager/brand")
 @RequiredArgsConstructor
 public class BrandController {
 
