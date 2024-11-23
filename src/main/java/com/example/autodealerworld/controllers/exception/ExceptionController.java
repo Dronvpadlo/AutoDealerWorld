@@ -1,4 +1,4 @@
-package com.example.autodealerworld.controllers;
+package com.example.autodealerworld.controllers.exception;
 
 import com.example.autodealerworld.entity.dto.ExceptionDTO;
 import org.springframework.http.HttpStatus;

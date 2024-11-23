@@ -1,5 +1,7 @@
 package com.example.autodealerworld.entity;
 
+import com.example.autodealerworld.entity.enums.ProfileType;
+import com.example.autodealerworld.entity.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,17 +22,11 @@ public class User {
 
     private String phoneNumber;
 
-   /* private String password;
+   private String password;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
     @Enumerated(EnumType.STRING)
     private ProfileType profileType;
-*/
-    public User(String username, String email, String phoneNumber) {
-        this.username = username;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-    }
 }

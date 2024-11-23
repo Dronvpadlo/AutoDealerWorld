@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/cars/manager/brand")
-@RequiredArgsConstructor
+    @RestController
+    @RequestMapping("/cars/manager/brand")
+    @RequiredArgsConstructor
 public class BrandController {
 
     private final BrandService brandService;
