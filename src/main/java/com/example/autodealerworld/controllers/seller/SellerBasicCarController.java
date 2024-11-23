@@ -3,6 +3,7 @@ package com.example.autodealerworld.controllers.seller;
 import com.example.autodealerworld.entity.dto.CarDTO;
 import com.example.autodealerworld.entity.dto.CarFilterDTO;
 import com.example.autodealerworld.services.CarService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,14 @@ public class SellerBasicCarController {
     @PostMapping("")
     public ResponseEntity<CarDTO> postCar(@RequestBody @Valid CarDTO carDTO){
         return new ResponseEntity<>(carService.createCar(carDTO), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CarDTO> getCarById(@PathVariable Long id, HttpServletRequest request){
+        String viewerIp = request.getRemoteAddr();
+        CarDTO carDTO = carService.findCarById(id, viewerIp);
+        return new ResponseEntity<>(carDTO, HttpStatus.OK);
+
     }
 
     @DeleteMapping("/{id}")

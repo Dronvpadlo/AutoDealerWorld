@@ -39,7 +39,7 @@ public interface CarRepository extends JpaRepository<Car, Long> {
             "AND (:year IS NULL OR c.year = :year)" +
             "AND (:regionCode IS NULL OR c.region.code = :regionCode)"
     )
-    Double findAveragePriceByBrand(
+    Double findAveragePriceByParams(
             @Param("brand") String brand,
             @Param("model") String model,
             @Param("region") String region,

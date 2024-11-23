@@ -4,6 +4,7 @@ import com.example.autodealerworld.entity.dto.CarDTO;
 import com.example.autodealerworld.entity.dto.CarFilterDTO;
 import com.example.autodealerworld.entity.enums.RegionCode;
 import com.example.autodealerworld.services.CarService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,16 @@ public class SellerPremiumCarController {
     public ResponseEntity<List<CarDTO>> getCars(){
         return new ResponseEntity<>(carService.findAll(), HttpStatus.OK);
     }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CarDTO> getCarById(@PathVariable Long id, HttpServletRequest request){
+        String viewerIp = request.getRemoteAddr();
+        CarDTO carDTO = carService.findCarById(id, viewerIp);
+        return new ResponseEntity<>(carDTO, HttpStatus.OK);
+
+    }
+
 
     @PostMapping("")
     public ResponseEntity<CarDTO> postCar(@RequestBody @Valid CarDTO carDTO){
@@ -60,6 +71,12 @@ public class SellerPremiumCarController {
     ){
         Double averagePrice = carService.getAveragePrice(brand, model, region, year, regionCode);
         return new ResponseEntity<>(averagePrice, HttpStatus.OK);
+    }
+
+    @GetMapping("/stats/views")
+    public ResponseEntity<Long> getCarViews(@RequestParam Long carId) {
+        Long views = carService.getCarViews(carId);
+        return new ResponseEntity<>(views, HttpStatus.OK);
     }
 
 }

@@ -2,17 +2,20 @@ package com.example.autodealerworld.services;
 
 import com.example.autodealerworld.entity.Brand;
 import com.example.autodealerworld.entity.Car;
+import com.example.autodealerworld.entity.CarView;
 import com.example.autodealerworld.entity.dto.CarDTO;
 import com.example.autodealerworld.entity.dto.CarFilterDTO;
 import com.example.autodealerworld.entity.enums.RegionCode;
 import com.example.autodealerworld.repository.BrandRepository;
 import com.example.autodealerworld.repository.CarRepository;
+import com.example.autodealerworld.repository.CarViewRepository;
 import com.example.autodealerworld.util.CarUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -25,7 +28,7 @@ public class CarService {
 
     private final BrandRepository brandRepository;
 
-
+    private final CarViewRepository carViewRepository;
 
     public List<CarDTO> findAll(){
         return carRepository.findAll()
@@ -47,6 +50,19 @@ public class CarService {
         Car car = carUtil.mapCarToEntity(carDTO);
         carRepository.save(car);
         return carDTO;
+    }
+
+    public CarDTO findCarById(Long id, String viewerIp){
+
+        Car foundCar = carRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Car not found with id: " + id));
+        boolean isAlreadyViewed = carViewRepository.existsByCarIdAndViewerIp(id, viewerIp);
+        if (!isAlreadyViewed){
+            carViewRepository.save(new CarView(null, foundCar, viewerIp, LocalDateTime.now()));
+        }
+
+        return carUtil.mapCarToDTO(foundCar);
+
     }
 
     public void deleteCarById(Long id){
@@ -125,7 +141,7 @@ public class CarService {
             }
             return null;
         }
-        Double averagePrice = carRepository.findAveragePriceByBrand(brand, model, region, year, regionCode);
+        Double averagePrice = carRepository.findAveragePriceByParams(brand, model, region, year, regionCode);
         if (averagePrice != null){
             return BigDecimal.valueOf(averagePrice)
                     .setScale(2, RoundingMode.HALF_UP)
@@ -133,5 +149,11 @@ public class CarService {
         }
         return null;
     }
+
+    public Long getCarViews(Long carId) {
+        return carViewRepository.countCarViewsByCarId(carId);
+    }
+
+
 
 }
