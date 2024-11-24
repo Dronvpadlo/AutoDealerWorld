@@ -4,6 +4,7 @@ import com.example.autodealerworld.entity.dto.CarDTO;
 import com.example.autodealerworld.entity.dto.CarFilterDTO;
 import com.example.autodealerworld.entity.enums.RegionCode;
 import com.example.autodealerworld.services.CarService;
+import com.example.autodealerworld.services.CarViewService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SellerPremiumCarController {
     private final CarService carService;
+
+    private final CarViewService carViewService;
 
     @GetMapping("")
     public ResponseEntity<List<CarDTO>> getCars(){
@@ -73,10 +76,9 @@ public class SellerPremiumCarController {
         return new ResponseEntity<>(averagePrice, HttpStatus.OK);
     }
 
-    @GetMapping("/stats/views")
-    public ResponseEntity<Long> getCarViews(@RequestParam Long carId) {
-        Long views = carService.getCarViews(carId);
-        return new ResponseEntity<>(views, HttpStatus.OK);
+    @GetMapping("/stats/views/{carId}")
+    public ResponseEntity<Long> getCarViewsByTime(@PathVariable Long carId, @RequestParam(required = false) String period){
+        return new ResponseEntity<>(carViewService.getViewsByCarIdAndPeriod(carId, period), HttpStatus.OK);
     }
 
 }

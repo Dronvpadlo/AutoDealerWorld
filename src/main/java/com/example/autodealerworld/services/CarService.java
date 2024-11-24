@@ -150,10 +150,4 @@ public class CarService {
         return null;
     }
 
-    public Long getCarViews(Long carId) {
-        return carViewRepository.countCarViewsByCarId(carId);
-    }
-
-
-
 }
