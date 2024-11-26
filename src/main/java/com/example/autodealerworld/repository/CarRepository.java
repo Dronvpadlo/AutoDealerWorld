@@ -50,4 +50,5 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     @Query("SELECT AVG(c.price) FROM Car c")
     Double findGlobalAveragePrice();
 
+    long countByOwnerIdAndCarStatus(Long userId, CarStatus carStatus);
 }

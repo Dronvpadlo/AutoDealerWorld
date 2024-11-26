@@ -3,12 +3,17 @@ package com.example.autodealerworld.services;
 import com.example.autodealerworld.entity.Brand;
 import com.example.autodealerworld.entity.Car;
 import com.example.autodealerworld.entity.CarView;
+import com.example.autodealerworld.entity.User;
 import com.example.autodealerworld.entity.dto.CarDTO;
 import com.example.autodealerworld.entity.dto.CarFilterDTO;
+import com.example.autodealerworld.entity.dto.UserDTO;
+import com.example.autodealerworld.entity.enums.CarStatus;
+import com.example.autodealerworld.entity.enums.ProfileType;
 import com.example.autodealerworld.entity.enums.RegionCode;
 import com.example.autodealerworld.repository.BrandRepository;
 import com.example.autodealerworld.repository.CarRepository;
 import com.example.autodealerworld.repository.CarViewRepository;
+import com.example.autodealerworld.repository.UserRepository;
 import com.example.autodealerworld.util.CarUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +35,8 @@ public class CarService {
 
     private final CarViewRepository carViewRepository;
 
+    private final UserRepository userRepository;
+
     public List<CarDTO> findAll(){
         return carRepository.findAll()
                 .stream().map(carUtil::mapCarToDTO)
@@ -37,6 +44,22 @@ public class CarService {
     }
 
     public CarDTO createCar(CarDTO carDTO){
+
+        UserDTO owner = carDTO.getOwner();
+
+        if (owner == null || owner.getUserId() == null){
+            throw new RuntimeException("Owner information is required");
+        }
+
+        User existUser = userRepository.findById(owner.getUserId()).orElseThrow(() -> new RuntimeException("Owner must be created"));
+
+        if (existUser.getProfileType() == ProfileType.BASIC){
+            long activeCarsCount = carRepository.countByOwnerIdAndCarStatus(owner.getUserId(), CarStatus.ACTIVE);
+            if (activeCarsCount >= 1){
+                throw new IllegalStateException("Basic account can create only one car");
+            }
+        }
+
         Brand brand = brandRepository.findById(carDTO.getBrand().getBrandId())
                 .orElseThrow(()-> new RuntimeException("Brand not found"));
 
