@@ -21,20 +21,29 @@ public class UserService {
     private final UserUtil userUtil;
 
     public UserDTO userRegister(RegisterDTO registerDTO){
+        System.out.println(registerDTO.getPassword());
         if (!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())){
             throw new RuntimeException("Password not equal");
         }
-        User user = new User();
-        user.setUsername(registerDTO.getUsername());
-        user.setPassword(registerDTO.getPassword());
-        user.setEmail(registerDTO.getEmail());
-        user.setPhoneNumber(registerDTO.getPhoneNumber());
+        User user = userUtil.mapNewUserToEntity(registerDTO);
         user.setRole(UserRole.BUYER);
-        user.setProfileType(ProfileType.BASIC);
 
         userRepository.save(user);
         return userUtil.mapUserToDTO(user);
     }
+
+    public UserDTO createManager(RegisterDTO registerDTO){
+        System.out.println(registerDTO.getPassword());
+        if (!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())){
+            throw new RuntimeException("Password not equal");
+        }
+        User user = userUtil.mapNewUserToEntity(registerDTO);
+        user.setRole(UserRole.MANAGER);
+
+        userRepository.save(user);
+        return userUtil.mapUserToDTO(user);
+    }
+
 
     public List<UserDTO> findUsers(){
         return userRepository.findAll().stream().map(userUtil::mapUserToDTO).toList();

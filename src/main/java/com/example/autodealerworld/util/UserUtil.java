@@ -1,19 +1,22 @@
 package com.example.autodealerworld.util;
 
 import com.example.autodealerworld.entity.User;
+import com.example.autodealerworld.entity.dto.RegisterDTO;
 import com.example.autodealerworld.entity.dto.UserDTO;
+import com.example.autodealerworld.entity.enums.ProfileType;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserUtil {
 
-    public User mapUserToEntity(UserDTO userDTO){
+    public User mapNewUserToEntity(RegisterDTO registerDTO){
         User user = new User();
-        user.setUsername(userDTO.getUsername());
-        user.setEmail(userDTO.getUsername());
-        user.setPhoneNumber(userDTO.getPhoneNumber());
-        user.setRole(userDTO.getRole());
-        user.setProfileType(userDTO.getProfileType());
+        user.setUsername(registerDTO.getUsername());
+        user.setEmail(registerDTO.getUsername());
+        user.setPhoneNumber(registerDTO.getPhoneNumber());
+        user.setPassword(registerDTO.getPassword());
+        user.setPassword(registerDTO.getConfirmPassword());
+        user.setProfileType(ProfileType.BASIC);
         return user;
     }
 
@@ -27,4 +30,6 @@ public class UserUtil {
         userDTO.setUserId(user.getId());
         return userDTO;
     }
+
+
 }
