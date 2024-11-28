@@ -2,6 +2,7 @@ package com.example.autodealerworld.controllers.seller;
 
 import com.example.autodealerworld.entity.dto.CarDTO;
 import com.example.autodealerworld.entity.dto.CarFilterDTO;
+import com.example.autodealerworld.entity.enums.CarStatus;
 import com.example.autodealerworld.entity.enums.RegionCode;
 import com.example.autodealerworld.services.CarService;
 import com.example.autodealerworld.services.CarViewService;
@@ -37,8 +38,12 @@ public class SellerPremiumCarController {
 
 
     @PostMapping("")
-    public ResponseEntity<CarDTO> postCar(@RequestBody @Valid CarDTO carDTO){
-        return new ResponseEntity<>(carService.createCar(carDTO), HttpStatus.CREATED);
+    public ResponseEntity<CarDTO> postCar(@RequestBody @Valid CarDTO carDTO) {
+        CarDTO savedCar = carService.createCar(carDTO);
+        if (savedCar.getCarStatus() == CarStatus.EDIT_REQUIRED) {
+            return new ResponseEntity<>(savedCar, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(savedCar, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")

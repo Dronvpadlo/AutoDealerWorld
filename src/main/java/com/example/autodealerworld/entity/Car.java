@@ -46,6 +46,10 @@ public class Car {
     @Enumerated(EnumType.STRING)
     private CarStatus carStatus;
 
+    private String description;
+
+    private Integer editAttempts = 0;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;

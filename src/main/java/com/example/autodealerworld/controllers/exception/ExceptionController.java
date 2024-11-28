@@ -33,4 +33,9 @@ public class ExceptionController {
                 ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(BadWordsFoundException.class)
+    public ResponseEntity<String> handleBadWordsException(BadWordsFoundException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 }

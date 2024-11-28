@@ -34,7 +34,6 @@ public class CarDTO {
 
     private String exchangeRateInfo;
 
-
     @NotNull(message = "year can not be null")
     @Positive(message = "year must be positive")
     private Long year;
@@ -45,8 +44,9 @@ public class CarDTO {
     @NotNull(message = "region can not be null")
     private RegionDTO region;
 
-    @NotNull(message = "car status can not be null")
     private CarStatus carStatus;
+
+    private String description;
 
     private UserDTO owner;
 }

@@ -1,5 +1,6 @@
 package com.example.autodealerworld.services;
 
+import com.example.autodealerworld.controllers.exception.BadWordsFoundException;
 import com.example.autodealerworld.entity.*;
 import com.example.autodealerworld.entity.dto.CarDTO;
 import com.example.autodealerworld.entity.dto.CarFilterDTO;
@@ -8,10 +9,7 @@ import com.example.autodealerworld.entity.enums.CarStatus;
 import com.example.autodealerworld.entity.enums.Currency;
 import com.example.autodealerworld.entity.enums.ProfileType;
 import com.example.autodealerworld.entity.enums.RegionCode;
-import com.example.autodealerworld.repository.BrandRepository;
-import com.example.autodealerworld.repository.CarRepository;
-import com.example.autodealerworld.repository.CarViewRepository;
-import com.example.autodealerworld.repository.UserRepository;
+import com.example.autodealerworld.repository.*;
 import com.example.autodealerworld.util.CarUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,37 +36,79 @@ public class CarService {
 
     private final PrivatBankCurrencyService privatBankCurrencyService;
 
+    private final ProfanityFilterService profanityFilterService;
+
+    private final InvalidCarRepository invalidCarRepository;
+
     public List<CarDTO> findAll(){
         return carRepository.findAll()
                 .stream().map(carUtil::mapCarToDTO)
                 .toList();
     }
 
-    public CarDTO createCar(CarDTO carDTO){
+    public CarDTO createCar(CarDTO carDTO) {
 
+        Car car = carUtil.mapCarToEntity(carDTO);
+
+        boolean containsBannedWords = profanityFilterService.containsBannedWords(carDTO.getDescription());
+        Long userId = carDTO.getOwner().getUserId();
+        System.out.println("Contains banned words: " + containsBannedWords);
+
+        if (containsBannedWords) {
+            // Отримуємо запис із таблиці invalid_ads або створюємо новий
+            InvalidCar invalidCar = invalidCarRepository.findByUserId(userId)
+                    .orElse(new InvalidCar());
+
+            invalidCar.setUserId(userId);
+            invalidCar.setDescription(carDTO.getDescription());
+            invalidCar.setEditAttempts(invalidCar.getEditAttempts() + 1);
+            System.out.println("Edit attempts: " + invalidCar.getEditAttempts());
+
+
+
+            if (invalidCar.getEditAttempts() > 3) {
+                car.setCarStatus(CarStatus.INACTIVE);
+                System.out.println("Car status set to INACTIVE after 3 edit attempts.");
+            } else {
+                car.setCarStatus(CarStatus.EDIT_REQUIRED);
+            }
+
+            // Зберігаємо запис у таблиці invalid_ads
+            invalidCarRepository.save(invalidCar);
+
+            // Повертаємо DTO, оскільки автомобіль не зберігається
+            System.out.println("Car not saved due to status: " + car.getCarStatus());
+            throw new BadWordsFoundException("Description contains banned words. Please edit your description.");
+        } else {
+            // Якщо заборонених слів немає, видаляємо запис із invalid_ads
+            invalidCarRepository.findByUserId(userId).ifPresent(invalidCarRepository::delete);
+            car.setCarStatus(CarStatus.ACTIVE);
+        }
+
+        // Інші перевірки
         UserDTO owner = carDTO.getOwner();
-
-        if (owner == null || owner.getUserId() == null){
+        if (owner == null || owner.getUserId() == null) {
             throw new RuntimeException("Owner information is required");
         }
 
-        User existUser = userRepository.findById(owner.getUserId()).orElseThrow(() -> new RuntimeException("Owner must be created"));
+        User existUser = userRepository.findById(owner.getUserId())
+                .orElseThrow(() -> new RuntimeException("Owner must be created"));
 
-        if (existUser.getProfileType() == ProfileType.BASIC){
+        if (existUser.getProfileType() == ProfileType.BASIC) {
             long activeCarsCount = carRepository.countByOwnerIdAndCarStatus(owner.getUserId(), CarStatus.ACTIVE);
-            if (activeCarsCount >= 1){
+            if (activeCarsCount >= 1) {
                 throw new IllegalStateException("Basic account can create only one car");
             }
         }
 
         Brand brand = brandRepository.findById(carDTO.getBrand().getBrandId())
-                .orElseThrow(()-> new RuntimeException("Brand not found"));
+                .orElseThrow(() -> new RuntimeException("Brand not found"));
 
         boolean modelBelongsToBrand = brand.getModels()
                 .stream()
                 .anyMatch(model -> model.getId().equals(carDTO.getModel().getModelId()));
-        if (!modelBelongsToBrand){
-            throw new RuntimeException("Model does not belong to request brand");
+        if (!modelBelongsToBrand) {
+            throw new RuntimeException("Model does not belong to requested brand");
         }
 
         Map<Currency, Double> prices = privatBankCurrencyService.convertCurrencyPrices(carDTO.getPrice(), carDTO.getCurrency());
@@ -77,11 +117,13 @@ public class CarService {
         carDTO.setPriceInUAH(prices.get(Currency.UAH));
         carDTO.setExchangeRateInfo("Default currency is " + carDTO.getCurrency());
 
-        Car car = carUtil.mapCarToEntity(carDTO);
+        // Зберігаємо автомобіль тільки якщо статус ACTIVE
         carRepository.save(car);
         return carDTO;
-
     }
+
+
+
 
     public CarDTO findCarById(Long id, String viewerIp){
 
