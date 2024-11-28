@@ -60,7 +60,6 @@ public class CarService {
                     .orElse(new InvalidCar());
 
             invalidCar.setUserId(userId);
-            invalidCar.setDescription(carDTO.getDescription());
             invalidCar.setEditAttempts(invalidCar.getEditAttempts() + 1);
             System.out.println("Edit attempts: " + invalidCar.getEditAttempts());
 
