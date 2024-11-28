@@ -24,6 +24,15 @@ public class CarDTO {
     @Positive(message = "price must be positive")
     private Double price;
 
+    private Double priceInUSD;
+
+    private Double priceInEUR;
+
+    private Double priceInUAH;
+
+    private String exchangeRateInfo;
+
+
     @NotNull(message = "year can not be null")
     @Positive(message = "year must be positive")
     private Long year;

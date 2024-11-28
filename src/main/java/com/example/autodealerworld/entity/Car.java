@@ -26,6 +26,14 @@ public class Car {
 
     private Double price;
 
+    private Double priceInUSD;
+
+    private Double priceInEUR;
+
+    private Double priceInUAH;
+
+    private String exchangeRateInfo;
+
     private Long year;
 
     @Enumerated(EnumType.STRING)

@@ -1,13 +1,11 @@
 package com.example.autodealerworld.services;
 
-import com.example.autodealerworld.entity.Brand;
-import com.example.autodealerworld.entity.Car;
-import com.example.autodealerworld.entity.CarView;
-import com.example.autodealerworld.entity.User;
+import com.example.autodealerworld.entity.*;
 import com.example.autodealerworld.entity.dto.CarDTO;
 import com.example.autodealerworld.entity.dto.CarFilterDTO;
 import com.example.autodealerworld.entity.dto.UserDTO;
 import com.example.autodealerworld.entity.enums.CarStatus;
+import com.example.autodealerworld.entity.enums.Currency;
 import com.example.autodealerworld.entity.enums.ProfileType;
 import com.example.autodealerworld.entity.enums.RegionCode;
 import com.example.autodealerworld.repository.BrandRepository;
@@ -22,6 +20,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +35,8 @@ public class CarService {
     private final CarViewRepository carViewRepository;
 
     private final UserRepository userRepository;
+
+    private final PrivatBankCurrencyService privatBankCurrencyService;
 
     public List<CarDTO> findAll(){
         return carRepository.findAll()
@@ -70,9 +71,16 @@ public class CarService {
             throw new RuntimeException("Model does not belong to request brand");
         }
 
+        Map<Currency, Double> prices = privatBankCurrencyService.convertCurrencyPrices(carDTO.getPrice(), carDTO.getCurrency());
+        carDTO.setPriceInUSD(prices.get(Currency.USD));
+        carDTO.setPriceInEUR(prices.get(Currency.EUR));
+        carDTO.setPriceInUAH(prices.get(Currency.UAH));
+        carDTO.setExchangeRateInfo("Default currency is " + carDTO.getCurrency());
+
         Car car = carUtil.mapCarToEntity(carDTO);
         carRepository.save(car);
         return carDTO;
+
     }
 
     public CarDTO findCarById(Long id, String viewerIp){

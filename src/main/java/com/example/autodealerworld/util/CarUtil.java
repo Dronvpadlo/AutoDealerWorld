@@ -45,6 +45,10 @@ public class CarUtil {
         car.setPrice(carDTO.getPrice());
         car.setYear(carDTO.getYear());
         car.setCurrency(carDTO.getCurrency());
+        car.setPriceInUSD(carDTO.getPriceInUSD());
+        car.setPriceInEUR(carDTO.getPriceInEUR());
+        car.setPriceInUAH(carDTO.getPriceInUAH());
+        car.setExchangeRateInfo(carDTO.getExchangeRateInfo());
         if (carDTO.getBrand() != null){
             Brand brand = brandService.findBrandById(carDTO.getBrand().getBrandId());
             car.setBrand(brand);
@@ -76,6 +80,10 @@ public class CarUtil {
         carDTO.setYear(car.getYear());
         carDTO.setCurrency(car.getCurrency());
         carDTO.setCarId(car.getId());
+        carDTO.setPriceInUSD(car.getPriceInUSD());
+        carDTO.setPriceInEUR(car.getPriceInEUR());
+        carDTO.setPriceInUAH(car.getPriceInUAH());
+        carDTO.setExchangeRateInfo(car.getExchangeRateInfo());
         if (car.getBrand() != null){
             Brand brand = brandService.findBrandById(car.getBrand().getId());
             BrandDTO brandDTO = brandUtil.mapBrandToDTO(brand);

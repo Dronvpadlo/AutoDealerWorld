@@ -25,6 +25,17 @@ public class PrivatBankCurrencyService {
 
     private static final String PRIVATBANK_API_URL = "https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5";
 
+    public CurrencyRate getOrUpdateCurrencyRates(Currency baseCurrency){
+        CurrencyRate rate = currencyRateRepository.findByBaseCurrency(baseCurrency).orElse(null);
+
+        if (rate == null || rate.getLastTimeUpdate().isBefore(LocalDateTime.now().minusDays(1))) {
+            updateCurrencyRates();
+            rate = currencyRateRepository.findByBaseCurrency(baseCurrency)
+                    .orElseThrow(()-> new RuntimeException("Failed to fetch updated rates"));
+        }
+        return rate;
+    }
+
     public void updateCurrencyRates() {
         ResponseEntity<PrivatBankRateDTO[]> response = restTemplate.getForEntity(PRIVATBANK_API_URL, PrivatBankRateDTO[].class);
         PrivatBankRateDTO[] rates = response.getBody();
@@ -67,4 +78,27 @@ public class PrivatBankCurrencyService {
 
         currencyRateRepository.save(rate);
     }
+
+    public Map<Currency, Double> convertCurrencyPrices(Double amount, Currency baseCurrency) {
+        CurrencyRate rate = getOrUpdateCurrencyRates(Currency.UAH); // UAH як базова валюта
+
+        Map<Currency, Double> prices = new HashMap<>();
+        if (baseCurrency == Currency.USD) {
+            prices.put(Currency.USD, amount);
+            prices.put(Currency.EUR, amount * rate.getToEURRate());
+            prices.put(Currency.UAH, amount * rate.getToUSDRate());
+        } else if (baseCurrency == Currency.EUR) {
+            prices.put(Currency.EUR, amount);
+            prices.put(Currency.USD, amount / rate.getToEURRate());
+            prices.put(Currency.UAH, (amount / rate.getToEURRate()) * rate.getToUSDRate());
+        } else if (baseCurrency == Currency.UAH) {
+            prices.put(Currency.UAH, amount);
+            prices.put(Currency.USD, amount / rate.getToUSDRate());
+            prices.put(Currency.EUR, (amount / rate.getToUSDRate()) * rate.getToEURRate());
+        }
+
+        return prices;
+    }
+
+
 }
