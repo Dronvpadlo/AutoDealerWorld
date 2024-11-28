@@ -3,6 +3,7 @@ package com.example.autodealerworld.entity.dto;
 
 import com.example.autodealerworld.entity.enums.CarStatus;
 import com.example.autodealerworld.entity.enums.Currency;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CarDTO {
 
     private Long carId;
