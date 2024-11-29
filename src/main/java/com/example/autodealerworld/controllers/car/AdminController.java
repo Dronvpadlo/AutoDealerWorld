@@ -4,8 +4,11 @@ import com.example.autodealerworld.entity.Role;
 import com.example.autodealerworld.entity.RolesPermission;
 import com.example.autodealerworld.entity.dto.PermissionDTO;
 import com.example.autodealerworld.entity.dto.RegisterDTO;
+import com.example.autodealerworld.entity.dto.RoleDTO;
 import com.example.autodealerworld.entity.dto.UserDTO;
+import com.example.autodealerworld.entity.enums.RoleName;
 import com.example.autodealerworld.services.PermissionService;
+import com.example.autodealerworld.services.RoleService;
 import com.example.autodealerworld.services.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +27,8 @@ public class AdminController {
 
     private final PermissionService permissionService;
 
+    private final RoleService roleService;
+
     @PostMapping("")
     public ResponseEntity<UserDTO> createManager(@RequestBody @Valid RegisterDTO registerDTO){
         return new ResponseEntity<>(userService.createManager(registerDTO), HttpStatus.CREATED);
@@ -40,12 +45,18 @@ public class AdminController {
     }
 
     @PostMapping("/role")
-    public ResponseEntity<Role> createRole(Role role){
-        return null;
+    public ResponseEntity<RoleDTO> createRole(@RequestParam String name){
+        return new ResponseEntity<>(roleService.createRole(name), HttpStatus.CREATED);
     }
 
     @GetMapping("/role")
-    public ResponseEntity<List<Role>> findRoles(){
-        return null;
+    public ResponseEntity<List<RoleDTO>> findRoles(){
+        return new ResponseEntity<>(roleService.getAllRoles(), HttpStatus.OK);
+    }
+    @PostMapping("/role/{roleId}/permissions/{permissionId}")
+    public ResponseEntity<RoleDTO> addPermissionToRole(@PathVariable Long roleId,
+                                                       @PathVariable Long permissionId) {
+        RoleDTO updatedRole = roleService.addPermissionToRole(roleId, permissionId);
+        return new ResponseEntity<>(updatedRole, HttpStatus.OK);
     }
 }

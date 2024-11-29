@@ -1,5 +1,7 @@
 package com.example.autodealerworld.entity;
 
+import com.example.autodealerworld.entity.enums.RoleName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +32,7 @@ public class Role {
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
+    @JsonIgnore
     private Set<RolesPermission> permissions = new HashSet<>();
 
 }

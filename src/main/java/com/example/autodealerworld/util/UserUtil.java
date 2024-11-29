@@ -4,19 +4,26 @@ import com.example.autodealerworld.entity.User;
 import com.example.autodealerworld.entity.dto.RegisterDTO;
 import com.example.autodealerworld.entity.dto.UserDTO;
 import com.example.autodealerworld.entity.enums.ProfileType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserUtil {
 
+    private final PasswordEncoder passwordEncoder;
+
+    public UserUtil(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
     public User mapNewUserToEntity(RegisterDTO registerDTO){
         User user = new User();
         user.setUsername(registerDTO.getUsername());
-        user.setEmail(registerDTO.getUsername());
+        user.setEmail(registerDTO.getEmail());
         user.setPhoneNumber(registerDTO.getPhoneNumber());
-        user.setPassword(registerDTO.getPassword());
-        user.setPassword(registerDTO.getConfirmPassword());
+        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
         user.setProfileType(ProfileType.BASIC);
+        System.out.println(user);
         return user;
     }
 

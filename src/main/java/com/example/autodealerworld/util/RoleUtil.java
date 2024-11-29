@@ -14,10 +14,11 @@ public class RoleUtil {
         return role;
     }
 
-    public RoleDTO mapROleToDTO(Role role){
+    public RoleDTO mapRoleToDTO(Role role){
         RoleDTO roleDTO = new RoleDTO();
-        roleDTO.setName(roleDTO.getName());
-        roleDTO.setPermissions(roleDTO.getPermissions());
+        roleDTO.setName(role.getName());
+        roleDTO.setPermissions(role.getPermissions());
+        roleDTO.setId(role.getId());
         return roleDTO;
     }
 }

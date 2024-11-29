@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class RegisterController {
-    private final UserService userService;
+    /*private final UserService userService;
 
     @PostMapping("/signup")
     public ResponseEntity<UserDTO> userRegister(@RequestBody @Valid RegisterDTO registerDTO){
@@ -28,5 +28,5 @@ public class RegisterController {
     @PostMapping("/buypremium")
     public ResponseEntity<UserDTO> buyPremium(@RequestParam Long userId){
         return new ResponseEntity<>(userService.buyPremium(userId), HttpStatus.OK);
-    }
+    }*/
 }

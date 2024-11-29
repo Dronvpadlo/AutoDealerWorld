@@ -8,6 +8,7 @@ import com.example.autodealerworld.entity.enums.RoleName;
 import com.example.autodealerworld.repository.UserRepository;
 import com.example.autodealerworld.util.UserUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,19 +18,16 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
-
     private final UserUtil userUtil;
 
     public UserDTO userRegister(RegisterDTO registerDTO){
-        System.out.println(registerDTO.getPassword());
-        if (!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())){
-            throw new RuntimeException("Password not equal");
+        if (userRepository.existsByEmail(registerDTO.getEmail())){
+            throw new IllegalArgumentException("Email is already taken");
         }
-        User user = userUtil.mapNewUserToEntity(registerDTO);
-        //user.setRole(UserRole.BUYER);
 
-        userRepository.save(user);
+        User user = userRepository.save(userUtil.mapNewUserToEntity(registerDTO));
         return userUtil.mapUserToDTO(user);
+
     }
 
     public UserDTO createManager(RegisterDTO registerDTO){
