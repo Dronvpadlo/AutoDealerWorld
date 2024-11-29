@@ -95,12 +95,7 @@ public class CarService {
         }
 
         Brand brand = brandRepository.findById(carDTO.getBrand().getBrandId())
-                .orElseThrow(() ->{
-                    System.out.println("its worked");
-                    mailService.notifyManagerForBrandNotExist(
-                            "Brand with ID " + carDTO.getBrand().getBrandId() + " was not found during car creation attempt by user " + carDTO.getOwner().getUserId());
-                    return new RuntimeException("Brand not found");
-                });
+                .orElseThrow(() -> new RuntimeException("Brand not found"));
 
 
         boolean modelBelongsToBrand = brand.getModels()
@@ -120,8 +115,13 @@ public class CarService {
         return carDTO;
     }
 
-
-
+    public void findBrandByName(String brandName){
+        boolean brandExist = brandRepository.existsBrandByName(brandName);
+        if (brandExist){
+            throw new IllegalArgumentException("Brand with name: " + brandName + " is already exist");
+        }
+        mailService.notifyManagerForBrandNotExist(brandName);
+    }
 
     public CarDTO findCarById(Long id, String viewerIp){
 
@@ -133,7 +133,6 @@ public class CarService {
         }
 
         return carUtil.mapCarToDTO(foundCar);
-
     }
 
     public void deleteCarById(Long id){
@@ -152,7 +151,6 @@ public class CarService {
         car.setRegion(newCar.getRegion());
         carRepository.save(car);
         return carUtil.mapCarToDTO(car);
-
     }
 
     public CarDTO updateCarPartially(Long id, CarDTO carDTO){
@@ -183,7 +181,6 @@ public class CarService {
 
         carRepository.save(car);
         return carUtil.mapCarToDTO(car);
-
     }
 
     public List<CarDTO> getFilteredCar(CarFilterDTO filterDTO){
@@ -199,7 +196,6 @@ public class CarService {
         );
         return cars.stream()
                 .map(carUtil::mapCarToDTO).toList();
-
     }
 
     public Double getAveragePrice(String brand, String model, String region, Long year, RegionCode regionCode){

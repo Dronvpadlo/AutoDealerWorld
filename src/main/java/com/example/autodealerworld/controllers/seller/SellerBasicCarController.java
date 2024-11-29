@@ -38,7 +38,18 @@ public class SellerBasicCarController {
         String viewerIp = request.getRemoteAddr();
         CarDTO carDTO = carService.findCarById(id, viewerIp);
         return new ResponseEntity<>(carDTO, HttpStatus.OK);
+    }
 
+    @PostMapping("/newbrandrequest")
+    public ResponseEntity<String> newBrandRequest(@RequestParam String brandName){
+        try {
+            carService.findBrandByName(brandName);
+            return ResponseEntity.ok("Brand request has been sent successfully.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to process request: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
