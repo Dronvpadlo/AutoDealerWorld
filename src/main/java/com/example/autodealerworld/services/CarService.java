@@ -40,6 +40,8 @@ public class CarService {
 
     private final InvalidCarRepository invalidCarRepository;
 
+    private final MailService mailService;
+
     public List<CarDTO> findAll(){
         return carRepository.findAll()
                 .stream().map(carUtil::mapCarToDTO)
@@ -52,39 +54,32 @@ public class CarService {
 
         boolean containsBannedWords = profanityFilterService.containsBannedWords(carDTO.getDescription());
         Long userId = carDTO.getOwner().getUserId();
-        System.out.println("Contains banned words: " + containsBannedWords);
 
         if (containsBannedWords) {
-            // Отримуємо запис із таблиці invalid_ads або створюємо новий
             InvalidCar invalidCar = invalidCarRepository.findByUserId(userId)
                     .orElse(new InvalidCar());
 
             invalidCar.setUserId(userId);
             invalidCar.setEditAttempts(invalidCar.getEditAttempts() + 1);
-            System.out.println("Edit attempts: " + invalidCar.getEditAttempts());
 
 
 
             if (invalidCar.getEditAttempts() > 3) {
                 car.setCarStatus(CarStatus.INACTIVE);
-                System.out.println("Car status set to INACTIVE after 3 edit attempts.");
+                mailService.notifyManager(car);
             } else {
                 car.setCarStatus(CarStatus.EDIT_REQUIRED);
             }
 
-            // Зберігаємо запис у таблиці invalid_ads
             invalidCarRepository.save(invalidCar);
 
-            // Повертаємо DTO, оскільки автомобіль не зберігається
             System.out.println("Car not saved due to status: " + car.getCarStatus());
             throw new BadWordsFoundException("Description contains banned words. Please edit your description.");
         } else {
-            // Якщо заборонених слів немає, видаляємо запис із invalid_ads
             invalidCarRepository.findByUserId(userId).ifPresent(invalidCarRepository::delete);
             car.setCarStatus(CarStatus.ACTIVE);
         }
 
-        // Інші перевірки
         UserDTO owner = carDTO.getOwner();
         if (owner == null || owner.getUserId() == null) {
             throw new RuntimeException("Owner information is required");
@@ -116,7 +111,6 @@ public class CarService {
         carDTO.setPriceInUAH(prices.get(Currency.UAH));
         carDTO.setExchangeRateInfo("Default currency is " + carDTO.getCurrency());
 
-        // Зберігаємо автомобіль тільки якщо статус ACTIVE
         carRepository.save(car);
         return carDTO;
     }
