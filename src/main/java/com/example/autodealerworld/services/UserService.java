@@ -4,7 +4,7 @@ import com.example.autodealerworld.entity.User;
 import com.example.autodealerworld.entity.dto.RegisterDTO;
 import com.example.autodealerworld.entity.dto.UserDTO;
 import com.example.autodealerworld.entity.enums.ProfileType;
-import com.example.autodealerworld.entity.enums.UserRole;
+import com.example.autodealerworld.entity.enums.RoleName;
 import com.example.autodealerworld.repository.UserRepository;
 import com.example.autodealerworld.util.UserUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class UserService {
             throw new RuntimeException("Password not equal");
         }
         User user = userUtil.mapNewUserToEntity(registerDTO);
-        user.setRole(UserRole.BUYER);
+        //user.setRole(UserRole.BUYER);
 
         userRepository.save(user);
         return userUtil.mapUserToDTO(user);
@@ -38,7 +38,7 @@ public class UserService {
             throw new RuntimeException("Password not equal");
         }
         User user = userUtil.mapNewUserToEntity(registerDTO);
-        user.setRole(UserRole.MANAGER);
+        //user.setRole(UserRole.MANAGER);
 
         userRepository.save(user);
         return userUtil.mapUserToDTO(user);
@@ -60,7 +60,7 @@ public class UserService {
         if (user.getEmail() == null || user.getPhoneNumber() == null){
             throw new RuntimeException("Email and phone number are required to become a seller");
         }
-        user.setRole(UserRole.SELLER);
+        //user.setRole(UserRole.SELLER);
         userRepository.save(user);
         return userUtil.mapUserToDTO(user);
     }
@@ -68,7 +68,7 @@ public class UserService {
     public UserDTO buyPremium(Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new RuntimeException("User not found"));
-        if (!user.getRole().equals(UserRole.SELLER)){
+        if (!user.getRole().equals(RoleName.SELLER)){
             throw new RuntimeException("Only Seller can buy Premium");
         }
         user.setProfileType(ProfileType.PREMIUM);
@@ -77,12 +77,12 @@ public class UserService {
     }
 
 
-    public UserDTO changeUserRoleOrProfileType(Long userId, UserRole newRole, ProfileType newProfileType){
+    public UserDTO changeUserRoleOrProfileType(Long userId, RoleName newRole, ProfileType newProfileType){
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new RuntimeException("User not found"));
-        if (newRole != null){
+        /*if (newRole != null){
             user.setRole(newRole);
-        }
+        }*/
         if (newProfileType != null) {
             user.setProfileType(newProfileType);
         }

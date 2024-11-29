@@ -1,9 +1,12 @@
-package com.example.autodealerworld.controllers.manager;
+package com.example.autodealerworld.controllers.car;
 
 import com.example.autodealerworld.entity.dto.CarDTO;
 import com.example.autodealerworld.entity.dto.CarFilterDTO;
 import com.example.autodealerworld.entity.enums.CarStatus;
+import com.example.autodealerworld.entity.enums.RegionCode;
 import com.example.autodealerworld.services.CarService;
+import com.example.autodealerworld.services.CarViewService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,9 @@ public class CarController {
 
     private final CarService carService;
 
+    private final CarViewService carViewService;
+
+
     @GetMapping("")
     public ResponseEntity<List<CarDTO>> getCars(){
         return new ResponseEntity<>(carService.findAll(), HttpStatus.OK);
@@ -32,6 +38,15 @@ public class CarController {
         }
         return new ResponseEntity<>(savedCar, HttpStatus.CREATED);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CarDTO> getCarById(@PathVariable Long id, HttpServletRequest request){
+        String viewerIp = request.getRemoteAddr();
+        CarDTO carDTO = carService.findCarById(id, viewerIp);
+        return new ResponseEntity<>(carDTO, HttpStatus.OK);
+
+    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCar(@PathVariable Long id){
@@ -53,6 +68,24 @@ public class CarController {
     public ResponseEntity<List<CarDTO>> getFilteredCars(CarFilterDTO carFilterDTO){
         List<CarDTO> cars = carService.getFilteredCar(carFilterDTO);
         return new ResponseEntity<>(cars, HttpStatus.OK);
+    }
+
+    @GetMapping("/stats/average-price")
+    public ResponseEntity<Double> getAveragePriceByBrand(
+            @RequestParam(required = false) String brand,
+            @RequestParam(required = false) String model,
+            @RequestParam(required = false) String region,
+            @RequestParam(required = false) Long year,
+            @RequestParam(required = false) RegionCode regionCode
+
+    ){
+        Double averagePrice = carService.getAveragePrice(brand, model, region, year, regionCode);
+        return new ResponseEntity<>(averagePrice, HttpStatus.OK);
+    }
+
+    @GetMapping("/stats/views/{carId}")
+    public ResponseEntity<Long> getCarViewsByTime(@PathVariable Long carId, @RequestParam(required = false) String period){
+        return new ResponseEntity<>(carViewService.getViewsByCarIdAndPeriod(carId, period), HttpStatus.OK);
     }
 
 }

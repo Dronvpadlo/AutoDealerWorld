@@ -1,4 +1,4 @@
-package com.example.autodealerworld.controllers.admin;
+package com.example.autodealerworld.controllers.car;
 
 import com.example.autodealerworld.entity.CurrencyRate;
 import com.example.autodealerworld.repository.CurrencyRateRepository;

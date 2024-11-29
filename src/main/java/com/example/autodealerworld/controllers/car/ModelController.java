@@ -1,4 +1,4 @@
-package com.example.autodealerworld.controllers.manager;
+package com.example.autodealerworld.controllers.car;
 
 import com.example.autodealerworld.entity.dto.ModelDTO;
 import com.example.autodealerworld.services.ModelService;

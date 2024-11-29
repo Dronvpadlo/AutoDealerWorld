@@ -1,9 +1,11 @@
 package com.example.autodealerworld.entity.dto;
 
+import com.example.autodealerworld.entity.Role;
 import com.example.autodealerworld.entity.enums.ProfileType;
-import com.example.autodealerworld.entity.enums.UserRole;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -16,7 +18,7 @@ public class UserDTO {
 
     private String phoneNumber;
 
-    private UserRole role;
+    private Set<Role> role;
 
     private ProfileType profileType;
 }
