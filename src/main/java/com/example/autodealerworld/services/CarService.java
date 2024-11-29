@@ -66,14 +66,13 @@ public class CarService {
 
             if (invalidCar.getEditAttempts() > 3) {
                 car.setCarStatus(CarStatus.INACTIVE);
-                mailService.notifyManager(car);
+                mailService.notifyManagerForInvalidCar(car);
             } else {
                 car.setCarStatus(CarStatus.EDIT_REQUIRED);
             }
 
             invalidCarRepository.save(invalidCar);
 
-            System.out.println("Car not saved due to status: " + car.getCarStatus());
             throw new BadWordsFoundException("Description contains banned words. Please edit your description.");
         } else {
             invalidCarRepository.findByUserId(userId).ifPresent(invalidCarRepository::delete);
@@ -96,7 +95,13 @@ public class CarService {
         }
 
         Brand brand = brandRepository.findById(carDTO.getBrand().getBrandId())
-                .orElseThrow(() -> new RuntimeException("Brand not found"));
+                .orElseThrow(() ->{
+                    System.out.println("its worked");
+                    mailService.notifyManagerForBrandNotExist(
+                            "Brand with ID " + carDTO.getBrand().getBrandId() + " was not found during car creation attempt by user " + carDTO.getOwner().getUserId());
+                    return new RuntimeException("Brand not found");
+                });
+
 
         boolean modelBelongsToBrand = brand.getModels()
                 .stream()
