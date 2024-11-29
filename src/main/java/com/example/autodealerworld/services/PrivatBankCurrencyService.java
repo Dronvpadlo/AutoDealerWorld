@@ -53,11 +53,12 @@ public class PrivatBankCurrencyService {
             throw new RuntimeException("Missing required currency rates from PrivatBank API");
         }
 
-        updateRate(Currency.UAH, 1.0, 1 / rateMap.get("USD"), 1 / rateMap.get("EUR"));
-
-        updateRate(Currency.USD, rateMap.get("USD"), 1.0, rateMap.get("EUR") / rateMap.get("USD"));
-
-        updateRate(Currency.EUR, rateMap.get("EUR"), rateMap.get("USD") / rateMap.get("EUR"), 1.0);
+        updateRate(Currency.UAH,
+                1.0, rateMap.get("USD"), rateMap.get("EUR"));
+        updateRate(Currency.USD,
+                1 / rateMap.get("USD"), 1.0, rateMap.get("EUR") / rateMap.get("USD"));
+        updateRate(Currency.EUR,
+                1 / rateMap.get("EUR"), rateMap.get("USD") / rateMap.get("EUR"), 1.0);
     }
     private Double roundToTwoDecimalPlaces(Double value) {
         if (value == null) {
@@ -70,35 +71,51 @@ public class PrivatBankCurrencyService {
 
     private void updateRate(Currency baseCurrency, Double toUahRate, Double toUsdRate, Double toEurRate) {
         CurrencyRate rate = currencyRateRepository.findByBaseCurrency(baseCurrency)
-                .orElseGet(() -> new CurrencyRate(null, baseCurrency, null, null, LocalDateTime.now()));
+                .orElseGet(() -> new CurrencyRate(null, baseCurrency, null, null, null,  LocalDateTime.now()));
 
         rate.setToUSDRate(roundToTwoDecimalPlaces(toUsdRate));
         rate.setToEURRate(roundToTwoDecimalPlaces(toEurRate));
+        rate.setToUAHRate(roundToTwoDecimalPlaces(toUahRate));
         rate.setLastTimeUpdate(LocalDateTime.now());
 
         currencyRateRepository.save(rate);
     }
 
     public Map<Currency, Double> convertCurrencyPrices(Double amount, Currency baseCurrency) {
-        CurrencyRate rate = getOrUpdateCurrencyRates(Currency.UAH); // UAH як базова валюта
+        // Отримуємо курси для відповідної базової валюти
+        CurrencyRate baseRate = getOrUpdateCurrencyRates(baseCurrency);
 
         Map<Currency, Double> prices = new HashMap<>();
-        if (baseCurrency == Currency.USD) {
-            prices.put(Currency.USD, amount);
-            prices.put(Currency.EUR, amount * rate.getToEURRate());
-            prices.put(Currency.UAH, amount * rate.getToUSDRate());
-        } else if (baseCurrency == Currency.EUR) {
-            prices.put(Currency.EUR, amount);
-            prices.put(Currency.USD, amount / rate.getToEURRate());
-            prices.put(Currency.UAH, (amount / rate.getToEURRate()) * rate.getToUSDRate());
-        } else if (baseCurrency == Currency.UAH) {
-            prices.put(Currency.UAH, amount);
-            prices.put(Currency.USD, amount / rate.getToUSDRate());
-            prices.put(Currency.EUR, (amount / rate.getToUSDRate()) * rate.getToEURRate());
+
+        switch (baseCurrency) {
+            case USD:
+                prices.put(Currency.USD, amount);
+                prices.put(Currency.EUR, amount / baseRate.getToEURRate()); // USD → EUR
+                prices.put(Currency.UAH, amount / baseRate.getToUAHRate()); // USD → UAH
+                break;
+
+            case EUR:
+                prices.put(Currency.EUR, amount);
+                prices.put(Currency.USD, amount / baseRate.getToUSDRate()); // EUR → USD
+                prices.put(Currency.UAH, amount / baseRate.getToUAHRate()); // EUR → UAH
+                break;
+
+            case UAH:
+                prices.put(Currency.UAH, amount);
+                prices.put(Currency.USD, amount / baseRate.getToUSDRate()); // UAH → USD
+                prices.put(Currency.EUR, amount / baseRate.getToEURRate()); // UAH → EUR
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unsupported base currency: " + baseCurrency);
         }
+
+        // Округлення значень до двох знаків після коми
+        prices.replaceAll((currency, value) -> roundToTwoDecimalPlaces(value));
 
         return prices;
     }
+
 
 
 }

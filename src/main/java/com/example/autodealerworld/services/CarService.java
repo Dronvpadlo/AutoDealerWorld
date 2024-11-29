@@ -106,9 +106,9 @@ public class CarService {
         }
 
         Map<Currency, Double> prices = privatBankCurrencyService.convertCurrencyPrices(carDTO.getPrice(), carDTO.getCurrency());
-        carDTO.setPriceInUSD(prices.get(Currency.USD));
-        carDTO.setPriceInEUR(prices.get(Currency.EUR));
-        carDTO.setPriceInUAH(prices.get(Currency.UAH));
+        car.setPriceInUSD(prices.get(Currency.USD));
+        car.setPriceInEUR(prices.get(Currency.EUR));
+        car.setPriceInUAH(prices.get(Currency.UAH));
         carDTO.setExchangeRateInfo("Default currency is " + carDTO.getCurrency());
 
         carRepository.save(car);

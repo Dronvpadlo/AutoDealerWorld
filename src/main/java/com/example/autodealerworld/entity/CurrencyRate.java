@@ -29,5 +29,9 @@ public class CurrencyRate {
     private Double toEURRate;
 
     @Column(nullable = false)
+    private Double toUAHRate;
+
+
+    @Column(nullable = false)
     private LocalDateTime lastTimeUpdate;
 }
