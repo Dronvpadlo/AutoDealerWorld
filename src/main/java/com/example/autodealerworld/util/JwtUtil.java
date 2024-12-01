@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Component
 public class JwtUtil {
@@ -51,10 +52,19 @@ public class JwtUtil {
                 .getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
-                .toList();
+                .collect(Collectors.toList());
 
-        return generateToken(user.getUsername(), accessTokenTtlMillis, Map.of("roles", roles));
+        Set<String> permissions = user.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toSet());
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", roles);
+        claims.put("permissions", permissions);
+
+        return generateToken(user.getUsername(), accessTokenTtlMillis, claims);
     }
+
 
     public String generateRefreshToken(UserDetails user) {
         return generateToken(user.getUsername(), refreshTokenTtlMillis, Collections.emptyMap());

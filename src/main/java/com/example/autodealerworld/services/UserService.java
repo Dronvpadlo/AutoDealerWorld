@@ -5,12 +5,10 @@ import com.example.autodealerworld.entity.User;
 import com.example.autodealerworld.entity.dto.RegisterDTO;
 import com.example.autodealerworld.entity.dto.UserDTO;
 import com.example.autodealerworld.entity.enums.ProfileType;
-import com.example.autodealerworld.entity.enums.RoleName;
 import com.example.autodealerworld.repository.RoleRepository;
 import com.example.autodealerworld.repository.UserRepository;
 import com.example.autodealerworld.util.UserUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -69,18 +67,6 @@ public class UserService {
             throw new RuntimeException("Only Seller can buy Premium");
         }
         user.setProfileType(ProfileType.PREMIUM);
-        userRepository.save(user);
-
-        return userUtil.mapUserToDTO(user);
-    }
-
-
-    public UserDTO changeUserRoleOrProfileType(Long userId, RoleName newRole, ProfileType newProfileType){
-        User user = userRepository.findById(userId)
-                .orElseThrow(()-> new RuntimeException("User not found"));
-        if (newProfileType != null) {
-            user.setProfileType(newProfileType);
-        }
         userRepository.save(user);
 
         return userUtil.mapUserToDTO(user);

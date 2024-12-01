@@ -7,13 +7,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class PermissionUtil {
 
-    public RolesPermission mapPermissionToEntity(PermissionDTO permissionDTO){
-        RolesPermission rolesPermission = new RolesPermission();
-        rolesPermission.setName(permissionDTO.getName());
-        rolesPermission.setRoles(permissionDTO.getRoles());
-        return rolesPermission;
-    }
-
     public PermissionDTO mapPermissionToDTO(RolesPermission rolesPermission){
         PermissionDTO permissionDTO = new PermissionDTO();
         permissionDTO.setName(rolesPermission.getName());

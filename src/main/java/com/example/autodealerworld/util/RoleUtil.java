@@ -7,13 +7,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class RoleUtil {
 
-    public Role mapRoleToEntity(RoleDTO roleDTO){
-        Role role = new Role();
-        role.setName(roleDTO.getName());
-        role.setPermissions(roleDTO.getPermissions());
-        return role;
-    }
-
     public RoleDTO mapRoleToDTO(Role role){
         RoleDTO roleDTO = new RoleDTO();
         roleDTO.setName(role.getName());

@@ -1,6 +1,5 @@
 package com.example.autodealerworld.entity;
 
-import com.example.autodealerworld.entity.enums.RoleName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

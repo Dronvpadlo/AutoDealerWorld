@@ -1,6 +1,5 @@
 package com.example.autodealerworld.entity.dto;
 
-import com.example.autodealerworld.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

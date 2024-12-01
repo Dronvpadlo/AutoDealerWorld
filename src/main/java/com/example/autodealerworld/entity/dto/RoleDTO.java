@@ -1,10 +1,8 @@
 package com.example.autodealerworld.entity.dto;
 
 import com.example.autodealerworld.entity.RolesPermission;
-import com.example.autodealerworld.entity.enums.RoleName;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 
 import java.util.HashSet;
 import java.util.Set;
