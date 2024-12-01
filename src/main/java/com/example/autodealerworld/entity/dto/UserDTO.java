@@ -5,6 +5,7 @@ import com.example.autodealerworld.entity.enums.ProfileType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -18,7 +19,9 @@ public class UserDTO {
 
     private String phoneNumber;
 
-    private Set<Role> role;
+    private Set<String> role;
 
     private ProfileType profileType;
+
+    private LocalDateTime registeredAt;
 }

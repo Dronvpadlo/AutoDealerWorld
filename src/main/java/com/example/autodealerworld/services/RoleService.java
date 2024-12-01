@@ -2,9 +2,7 @@ package com.example.autodealerworld.services;
 
 import com.example.autodealerworld.entity.Role;
 import com.example.autodealerworld.entity.RolesPermission;
-import com.example.autodealerworld.entity.dto.PermissionDTO;
 import com.example.autodealerworld.entity.dto.RoleDTO;
-import com.example.autodealerworld.entity.enums.RoleName;
 import com.example.autodealerworld.repository.PermissionRepository;
 import com.example.autodealerworld.repository.RoleRepository;
 import com.example.autodealerworld.util.RoleUtil;

@@ -25,19 +25,15 @@ public class UserService {
             throw new IllegalArgumentException("Email is already taken");
         }
 
-        User user = userRepository.save(userUtil.mapNewUserToEntity(registerDTO));
+        User user = userRepository.save(userUtil.mapUserToEntity(registerDTO));
         return userUtil.mapUserToDTO(user);
 
     }
 
     public UserDTO createManager(RegisterDTO registerDTO){
         System.out.println(registerDTO.getPassword());
-        if (!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())){
-            throw new RuntimeException("Password not equal");
-        }
-        User user = userUtil.mapNewUserToEntity(registerDTO);
-        //user.setRole(UserRole.MANAGER);
-
+        User user = userUtil.mapUserToEntity(registerDTO);
+        //user.setRoles();
         userRepository.save(user);
         return userUtil.mapUserToDTO(user);
     }
@@ -66,7 +62,7 @@ public class UserService {
     public UserDTO buyPremium(Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new RuntimeException("User not found"));
-        if (!user.getRole().equals(RoleName.SELLER)){
+        if (!user.getRoles().equals(RoleName.SELLER)){
             throw new RuntimeException("Only Seller can buy Premium");
         }
         user.setProfileType(ProfileType.PREMIUM);
@@ -78,9 +74,6 @@ public class UserService {
     public UserDTO changeUserRoleOrProfileType(Long userId, RoleName newRole, ProfileType newProfileType){
         User user = userRepository.findById(userId)
                 .orElseThrow(()-> new RuntimeException("User not found"));
-        /*if (newRole != null){
-            user.setRole(newRole);
-        }*/
         if (newProfileType != null) {
             user.setProfileType(newProfileType);
         }
