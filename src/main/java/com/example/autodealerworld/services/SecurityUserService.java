@@ -61,8 +61,8 @@ public class SecurityUserService implements UserDetailsService {
         userDTO.setRole(
                 user.getRoles()
                         .stream()
-                        .map(Role::getName) // Витягуємо назву кожної ролі
-                        .collect(Collectors.toSet()) // Збираємо в Set<String>
+                        .map(Role::getName)
+                        .collect(Collectors.toSet())
         );
         userDTO.setProfileType(user.getProfileType());
         return userDTO;

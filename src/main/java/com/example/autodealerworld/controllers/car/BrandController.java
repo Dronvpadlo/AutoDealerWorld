@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
     @RestController
-    @RequestMapping("/cars/manager/brand")
+    @RequestMapping("/cars/brand")
     @RequiredArgsConstructor
 public class BrandController {
 

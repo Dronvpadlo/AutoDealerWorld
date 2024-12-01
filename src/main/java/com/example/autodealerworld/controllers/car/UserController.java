@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cars/manager/users")
+@RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -27,4 +27,16 @@ public class UserController {
     public ResponseEntity<List<UserDTO>> findAllUsers(){
         return new ResponseEntity<>(userService.findUsers(), HttpStatus.OK);
     }
+
+    @PostMapping("/be-as-seller/{userId}")
+    public ResponseEntity<UserDTO> assignSellerRole(@PathVariable Long userId) {
+        UserDTO userDTO = userService.beAsSeller(userId);
+        return ResponseEntity.ok(userDTO);
+    }
+    @PostMapping("/buy-premium/{userId}")
+    public ResponseEntity<UserDTO> buyPremium(@PathVariable Long userId) {
+        UserDTO userDTO = userService.buyPremium(userId);
+        return ResponseEntity.ok(userDTO);
+    }
+
 }

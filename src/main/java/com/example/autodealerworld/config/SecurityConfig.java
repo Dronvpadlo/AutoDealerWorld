@@ -53,8 +53,8 @@ public class SecurityConfig {
                 .cors(CorsConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/auth/**", "/admin/role").permitAll()
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/auth/**").permitAll()
+                                //.requestMatchers("/admin/**").hasRole("ADMIN")
                                 .anyRequest().authenticated())
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

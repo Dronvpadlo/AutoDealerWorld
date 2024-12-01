@@ -55,6 +55,16 @@ public class CarService {
         boolean containsBannedWords = profanityFilterService.containsBannedWords(carDTO.getDescription());
         Long userId = carDTO.getOwner().getUserId();
 
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        boolean isSeller = user.getRoles().stream()
+                .anyMatch(role -> role.getName().equals("SELLER"));
+
+        if (!isSeller) {
+            throw new RuntimeException("Only users with the SELLER role can add cars");
+        }
+
         if (containsBannedWords) {
             InvalidCar invalidCar = invalidCarRepository.findByUserId(userId)
                     .orElse(new InvalidCar());

@@ -3,6 +3,7 @@ package com.example.autodealerworld.util;
 import com.example.autodealerworld.entity.Role;
 import com.example.autodealerworld.entity.User;
 import com.example.autodealerworld.entity.enums.ProfileType;
+import com.example.autodealerworld.repository.PermissionRepository;
 import com.example.autodealerworld.repository.RoleRepository;
 import com.example.autodealerworld.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -12,13 +13,14 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 
 @Component
-public class DataInitializer implements CommandLineRunner {
+public class RolesDataInitializer implements CommandLineRunner {
 
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public DataInitializer(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+
+    public RolesDataInitializer(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder, PermissionRepository permissionRepository) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
@@ -54,4 +56,5 @@ public class DataInitializer implements CommandLineRunner {
             userRepository.save(admin);
         }
     }
+
 }

@@ -1,10 +1,12 @@
 package com.example.autodealerworld.services;
 
+import com.example.autodealerworld.entity.Role;
 import com.example.autodealerworld.entity.User;
 import com.example.autodealerworld.entity.dto.RegisterDTO;
 import com.example.autodealerworld.entity.dto.UserDTO;
 import com.example.autodealerworld.entity.enums.ProfileType;
 import com.example.autodealerworld.entity.enums.RoleName;
+import com.example.autodealerworld.repository.RoleRepository;
 import com.example.autodealerworld.repository.UserRepository;
 import com.example.autodealerworld.util.UserUtil;
 import lombok.RequiredArgsConstructor;
@@ -19,16 +21,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserUtil userUtil;
-
-    public UserDTO userRegister(RegisterDTO registerDTO){
-        if (userRepository.existsByEmail(registerDTO.getEmail())){
-            throw new IllegalArgumentException("Email is already taken");
-        }
-
-        User user = userRepository.save(userUtil.mapUserToEntity(registerDTO));
-        return userUtil.mapUserToDTO(user);
-
-    }
+    private final RoleRepository roleRepository;
 
     public UserDTO createManager(RegisterDTO registerDTO){
         System.out.println(registerDTO.getPassword());
@@ -48,25 +41,36 @@ public class UserService {
                 .orElseThrow(()-> new RuntimeException("User not found"));
     }
 
-    public UserDTO beAsSeller(Long userId){
+    public UserDTO beAsSeller(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new RuntimeException("User not found"));
-        if (user.getEmail() == null || user.getPhoneNumber() == null){
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (user.getEmail() == null || user.getPhoneNumber() == null) {
             throw new RuntimeException("Email and phone number are required to become a seller");
         }
-        //user.setRole(UserRole.SELLER);
+
+        Role sellerRole = roleRepository.findByName("SELLER")
+                .orElseThrow(() -> new RuntimeException("Role SELLER not found"));
+
+        user.getRoles().add(sellerRole);
+
         userRepository.save(user);
         return userUtil.mapUserToDTO(user);
     }
 
-    public UserDTO buyPremium(Long userId){
+    public UserDTO buyPremium(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new RuntimeException("User not found"));
-        if (!user.getRoles().equals(RoleName.SELLER)){
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        boolean isSeller = user.getRoles().stream()
+                .anyMatch(role -> role.getName().equals("SELLER"));
+
+        if (!isSeller) {
             throw new RuntimeException("Only Seller can buy Premium");
         }
         user.setProfileType(ProfileType.PREMIUM);
         userRepository.save(user);
+
         return userUtil.mapUserToDTO(user);
     }
 

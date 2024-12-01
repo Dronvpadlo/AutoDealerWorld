@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cars/manager/region")
+@RequestMapping("/region")
 @RequiredArgsConstructor
 public class RegionController {
 
